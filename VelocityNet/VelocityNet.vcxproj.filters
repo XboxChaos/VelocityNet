@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\XboxInternals">
+      <UniqueIdentifier>{97742c41-a10b-4f33-8247-b4ec92b476f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\XboxInternals">
+      <UniqueIdentifier>{b4b6cf96-0bfa-43ea-b9cf-5fa441d71da1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Botan">
+      <UniqueIdentifier>{0673a98e-e407-4c7f-8596-680cd68ef343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Botan">
+      <UniqueIdentifier>{84e766e1-1f20-46a8-ae57-c6b96f8ee78f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Stfs">
+      <UniqueIdentifier>{73150277-eba4-4437-b2fc-cbd1652abeda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Stfs">
+      <UniqueIdentifier>{c83ec17b-9920-41fc-a0b7-884caebfbd00}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="XboxInternals\Account\Account.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Account\AccountDefinitions.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Account\AccountHelpers.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\AvatarAsset\AssetHelpers.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\AvatarAsset\AvatarAsset.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\AvatarAsset\AvatarAssetDefinintions.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\AvatarAwardGPD.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\BaseIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\DashboardGPD.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\DeviceIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\dirent.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\FileIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\GameGPD.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Disc\gdfx.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\GPDBase.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\MemoryIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\MultiFileIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Stfs\StfsConstants.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Stfs\StfsDefinitions.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Stfs\StfsPackage.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Disc\svod.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\SvodIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\winnames.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\XboxInternals_global.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Stfs\XContentHeader.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\XDBF.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\XDBFDefininitions.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\XDBFHelpers.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Cryptography\XeCrypt.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\Cryptography\XeKeys.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\AvatarAsset\YTGR.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="MarshalUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\botan_all.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="StfsPackageWrapper.h">
+      <Filter>Header Files\Stfs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="XboxInternals\Account\Account.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Account\AccountHelpers.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\AvatarAsset\AssetHelpers.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\AvatarAsset\AvatarAsset.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\AvatarAwardGPD.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\BaseIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\DashboardGPD.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\DeviceIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\FileIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\GameGPD.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Disc\gdfx.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\GPDBase.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\MemoryIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\MultiFileIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Stfs\StfsDefinitions.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Stfs\StfsPackage.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Disc\svod.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\SvodIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Stfs\XContentHeader.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\XDBF.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\XDBFHelpers.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Cryptography\XeCrypt.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Cryptography\XeKeys.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\AvatarAsset\YTGR.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarshalUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="botan\botan_all.cpp">
+      <Filter>Source Files\Botan</Filter>
+    </ClCompile>
+    <ClCompile Include="StfsPackageWrapper.cpp">
+      <Filter>Source Files\Stfs</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="COPYING" />
+  </ItemGroup>
+</Project>
