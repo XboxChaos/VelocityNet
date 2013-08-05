@@ -1,4 +1,4 @@
-#include "svod.h"
+#include "Svod.h"
 
 SVOD::SVOD(string rootPath)
 {
@@ -31,7 +31,7 @@ SVOD::SVOD(string rootPath)
     }
 
     // open an IO on the content files
-    io = new MultiFileIO(contentDirectory);
+    io = new SvodMultiFileIO(contentDirectory);
 
     // parse the header
     io->SetPosition(baseAddress, 0);
@@ -46,7 +46,7 @@ SVOD::~SVOD()
     io->Close();
     delete io;
 
-    rootFile->close();
+    rootFile->Close();
     delete rootFile;
 }
 
@@ -70,13 +70,13 @@ void SVOD::SectorToAddress(DWORD sector, DWORD *addressInDataFile, DWORD *dataFi
     *addressInDataFile += ((trueSector / 0x198) + ((trueSector % 0x198 == 0 && trueSector != 0) ? 0 : 1)) * 0x1000;
 }
 
-void SVOD::ReadFileListing(vector<GDFXFileEntry> *entryList, DWORD sector, int size, string path)
+void SVOD::ReadFileListing(vector<GdfxFileEntry> *entryList, DWORD sector, int size, string path)
 {
     DWORD eAddr, eIndex;
     SectorToAddress(sector, &eAddr, &eIndex);
     io->SetPosition(eAddr, eIndex);
 
-    GDFXFileEntry current;
+    GdfxFileEntry current;
 
     while (GdfxReadFileEntry(io, &current) && size != 0)
     {
@@ -131,7 +131,7 @@ void SVOD::ReadFileListing(vector<GDFXFileEntry> *entryList, DWORD sector, int s
     std::sort(entryList->begin(), entryList->end(), compareFileEntries);
 }
 
-GDFXFileEntry SVOD::GetFileEntry(string path, vector<GDFXFileEntry> *listing)
+GdfxFileEntry SVOD::GetFileEntry(string path, vector<GdfxFileEntry> *listing)
 {
     string entryName = path.substr(1, path.substr(1).find_first_of('/'));
 
@@ -154,7 +154,7 @@ SvodIO SVOD::GetSvodIO(string path)
     return GetSvodIO(GetFileEntry(path, &root));
 }
 
-SvodIO SVOD::GetSvodIO(GDFXFileEntry entry)
+SvodIO SVOD::GetSvodIO(GdfxFileEntry entry)
 {
     return SvodIO(metadata, entry, io);
 }
@@ -170,7 +170,7 @@ void SVOD::Rehash(void (*progress)(DWORD, DWORD, void*), void *arg)
     // iterate through all of the files
     for (int i = fileCount - 1; i >= 0; i--)
     {
-        io->SetPosition(0x2000, i);
+        io->SetPosition((DWORD)0x2000, i);
         DWORD hashTableCount = ((io->CurrentFileLength() - 0x2000) + 0xCCFFF) / 0xCD000;
         DWORD totalBlockCount = (io->CurrentFileLength() - 0x1000 - (hashTableCount * 0x1000)) >> 0xC;
 
@@ -190,7 +190,7 @@ void SVOD::Rehash(void (*progress)(DWORD, DWORD, void*), void *arg)
                 HashBlock(currentBlock, level0 + y * 0x14);
             }
 
-            // write the table
+            // Write the table
             io->SetPosition(0x1000 + x * 0xCD000, i);
             io->WriteBytes(level0, 0x1000);
 
@@ -204,8 +204,8 @@ void SVOD::Rehash(void (*progress)(DWORD, DWORD, void*), void *arg)
         // append the previous master hash to the table
         memcpy(master + hashTableCount * 0x14, prevHash, 0x14);
 
-        // write the master hash table
-        io->SetPosition(0, i);
+        // Write the master hash table
+        io->SetPosition((DWORD)0, i);
         io->WriteBytes(master, 0x1000);
 
         // hash the master table
@@ -226,8 +226,8 @@ void SVOD::Rehash(void (*progress)(DWORD, DWORD, void*), void *arg)
     DWORD dataLen = ((metadata->headerSize + 0xFFF) & 0xFFFFF000) - 0x344;
     BYTE *buff = new BYTE[dataLen];
 
-    rootFile->setPosition(0x344);
-    rootFile->readBytes(buff, dataLen);
+    rootFile->SetPosition(0x344);
+    rootFile->ReadBytes(buff, dataLen);
 
     Botan::SHA_160 sha1;
     sha1.clear();
@@ -245,20 +245,20 @@ void SVOD::HashBlock(BYTE *block, BYTE *outHash)
     sha1.final(outHash);
 }
 
-void SVOD::WriteFileEntry(GDFXFileEntry *entry)
+void SVOD::WriteFileEntry(GdfxFileEntry *entry)
 {
     GdfxWriteFileEntry(io, entry);
 }
 
 DWORD SVOD::GetSectorCount()
 {
-    io->SetPosition(0, io->FileCount() - 1);
+    io->SetPosition((DWORD)0, io->FileCount() - 1);
     DWORD fileLen = io->CurrentFileLength() - 0x2000;
 
     return (io->FileCount() * 0x14388) + ((fileLen - (0x1000 * (fileLen / 0xCD000))) / 0x800);
 }
 
-int compareFileEntries(GDFXFileEntry a, GDFXFileEntry b)
+int compareFileEntries(GdfxFileEntry a, GdfxFileEntry b)
 {
     return !!(a.attributes & GdfxDirectory);
 }

@@ -1,25 +1,25 @@
-#include "DashboardGPD.h"
+#include "DashboardGpd.h"
 #include <sstream>
 
 using std::stringstream;
 
 
-DashboardGPD::DashboardGPD(string gpdPath) : GPDBase(gpdPath)
+DashboardGpd::DashboardGpd(string gpdPath) : GpdBase(gpdPath)
 {
 	init();
 }
 
-DashboardGPD::DashboardGPD(FileIO *io) : GPDBase(io)
+DashboardGpd::DashboardGpd(FileIO *io) : GpdBase(io)
 {
 	init();
 }
 
-void DashboardGPD::CleanGPD()
+void DashboardGpd::CleanGpd()
 {
 	xdbf->Clean();
 }
 
-void DashboardGPD::init()
+void DashboardGpd::init()
 {
 	// set all the settings defaultly to zero, so there is a way of checking whether or not
 	// the entries were actually read in
@@ -98,49 +98,49 @@ void DashboardGPD::init()
 	}
 }
 
-TitleEntry DashboardGPD::readTitleEntry(XDBFEntry entry)
+TitleEntry DashboardGpd::readTitleEntry(XdbfEntry entry)
 {
 	// ensure that the entry is a title entry
 	if (entry.type != Title)
-		throw string("GPD: Error reading title entry. Specified entry isn't a title.\n");
+		throw string("Gpd: Error reading title entry. Specified entry isn't a title.\n");
 
 	TitleEntry toReturn;
 	toReturn.entry = entry;
 
 	// seek to title entry position
-	io->setPosition(xdbf->GetRealAddress(entry.addressSpecifier));
+    io->SetPosition(xdbf->GetRealAddress(entry.addressSpecifier));
 
 	// read the entry
-	toReturn.titleID = io->readDword();
-	toReturn.achievementCount = io->readDword();
-	toReturn.achievementsUnlocked = io->readDword();
-	toReturn.totalGamerscore = io->readDword();
-	toReturn.gamerscoreUnlocked = io->readDword();
-	toReturn.achievementsUnlockedOnline = io->readWord();
-	toReturn.avatarAwardsEarned = io->readByte();
-	toReturn.avatarAwardCount = io->readByte();
-	toReturn.maleAvatarAwardsEarned = io->readByte();
-	toReturn.maleAvatarAwardCount = io->readByte();
-	toReturn.femaleAvatarAwardsEarned = io->readByte();
-	toReturn.femaleAvatarAwardCount = io->readByte();
-	toReturn.flags = io->readDword();
+    toReturn.titleID = io->ReadDword();
+    toReturn.achievementCount = io->ReadDword();
+    toReturn.achievementsUnlocked = io->ReadDword();
+    toReturn.totalGamerscore = io->ReadDword();
+    toReturn.gamerscoreUnlocked = io->ReadDword();
+    toReturn.achievementsUnlockedOnline = io->ReadWord();
+    toReturn.avatarAwardsEarned = io->ReadByte();
+    toReturn.avatarAwardCount = io->ReadByte();
+    toReturn.maleAvatarAwardsEarned = io->ReadByte();
+    toReturn.maleAvatarAwardCount = io->ReadByte();
+    toReturn.femaleAvatarAwardsEarned = io->ReadByte();
+    toReturn.femaleAvatarAwardCount = io->ReadByte();
+    toReturn.flags = io->ReadDword();
 
 	// read the last time played
-	WINFILETIME time = { io->readDword(), io->readDword() };
+    WINFILETIME time = { io->ReadDword(), io->ReadDword() };
     if (time.dwHighDateTime == 0 && time.dwLowDateTime == 0)
         toReturn.lastPlayed = 0;
     else
-        toReturn.lastPlayed = XDBFHelpers::FILETIMEtoTimeT(time);
+        toReturn.lastPlayed = XdbfHelpers::FILETIMEtoTimeT(time);
 
 	// read the game name
-	toReturn.gameName = io->readWString();
+    toReturn.gameName = io->ReadWString();
 
 	toReturn.initialLength = entry.length;
 
 	return toReturn;
 }
 
-string DashboardGPD::GetSmallBoxArtURL(TitleEntry *entry)
+string DashboardGpd::GetSmallBoxArtURL(TitleEntry *entry)
 {
 	stringstream url;
 	url << "http://tiles.xbox.com/consoleAssets/";
@@ -150,7 +150,7 @@ string DashboardGPD::GetSmallBoxArtURL(TitleEntry *entry)
 	return url.str();
 }
 
-string DashboardGPD::GetLargeBoxArtURL(TitleEntry *entry)
+string DashboardGpd::GetLargeBoxArtURL(TitleEntry *entry)
 {
 	stringstream url;
 	url << "http://tiles.xbox.com/consoleAssets/";
@@ -160,7 +160,7 @@ string DashboardGPD::GetLargeBoxArtURL(TitleEntry *entry)
 	return url.str();
 }
 
-void DashboardGPD::WriteTitleEntry(TitleEntry *entry)
+void DashboardGpd::WriteTitleEntry(TitleEntry *entry)
 {
 	DWORD calculatedLength = 0x28 + ((entry->gameName.size() + 1) * 2);
 
@@ -173,43 +173,43 @@ void DashboardGPD::WriteTitleEntry(TitleEntry *entry)
 	}
 
 	// seek to the position of the title entry
-	io->setPosition(xdbf->GetRealAddress(entry->entry.addressSpecifier));
+    io->SetPosition(xdbf->GetRealAddress(entry->entry.addressSpecifier));
 
-	io->flush();
+    io->Flush();
 
-	// write the title entry
-	io->write(entry->titleID);
-	io->write(entry->achievementCount);
-	io->write(entry->achievementsUnlocked);
-	io->write(entry->totalGamerscore);
-	io->write(entry->gamerscoreUnlocked);
-	io->write(entry->achievementsUnlockedOnline);
-	io->write(entry->avatarAwardsEarned);
-	io->write(entry->avatarAwardCount);
-	io->write(entry->maleAvatarAwardsEarned);
-	io->write(entry->maleAvatarAwardCount);
-	io->write(entry->femaleAvatarAwardsEarned);
-	io->write(entry->femaleAvatarAwardCount);
-	io->write(entry->flags);
+	// Write the title entry
+    io->Write(entry->titleID);
+    io->Write(entry->achievementCount);
+    io->Write(entry->achievementsUnlocked);
+    io->Write(entry->totalGamerscore);
+    io->Write(entry->gamerscoreUnlocked);
+    io->Write(entry->achievementsUnlockedOnline);
+    io->Write(entry->avatarAwardsEarned);
+    io->Write(entry->avatarAwardCount);
+    io->Write(entry->maleAvatarAwardsEarned);
+    io->Write(entry->maleAvatarAwardCount);
+    io->Write(entry->femaleAvatarAwardsEarned);
+    io->Write(entry->femaleAvatarAwardCount);
+    io->Write(entry->flags);
 
-	// write the time last played
+	// Write the time last played
     if (entry->lastPlayed == 0)
-        io->setPosition(xdbf->GetRealAddress(entry->entry.addressSpecifier) + 0x28);
+        io->SetPosition(xdbf->GetRealAddress(entry->entry.addressSpecifier) + 0x28);
     else
     {
-        WINFILETIME time = XDBFHelpers::TimeTtoFILETIME(entry->lastPlayed);
-        io->write(time.dwHighDateTime);
-        io->write(time.dwLowDateTime);
+        WINFILETIME time = XdbfHelpers::TimeTtoFILETIME(entry->lastPlayed);
+        io->Write(time.dwHighDateTime);
+        io->Write(time.dwLowDateTime);
     }
 
-	io->write(entry->gameName);
+    io->Write(entry->gameName);
 
     xdbf->UpdateEntry(&entry->entry);
 
-	io->flush();
+    io->Flush();
 }
 
-void DashboardGPD::DeleteTitleEntry(TitleEntry *entry)
+void DashboardGpd::DeleteTitleEntry(TitleEntry *entry)
 {
 	// remove the entry from the list
 	DWORD i;
@@ -222,13 +222,13 @@ void DashboardGPD::DeleteTitleEntry(TitleEntry *entry)
 		}
 	}
     if (i > gamesPlayed.size())
-		throw string("GPD: Error deleting title entry. Title doesn't exist.\n");
+		throw string("Gpd: Error deleting title entry. Title doesn't exist.\n");
 
 	// delete the entry from the file
 	xdbf->DeleteEntry(entry->entry);
 }
 
-void DashboardGPD::CreateTitleEntry(TitleEntry *entry)
+void DashboardGpd::CreateTitleEntry(TitleEntry *entry)
 {
 	entry->initialLength = 0x28 + ((entry->gameName.size() + 1) * 2);
 
@@ -238,10 +238,10 @@ void DashboardGPD::CreateTitleEntry(TitleEntry *entry)
 	// add the title entry to the vector
 	gamesPlayed.push_back(*entry);
 
-	// write the data to the entry
+	// Write the data to the entry
 	WriteTitleEntry(entry);
 }
 
-DashboardGPD::~DashboardGPD(void)
+DashboardGpd::~DashboardGpd(void)
 {
 }

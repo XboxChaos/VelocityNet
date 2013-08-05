@@ -1,15 +1,18 @@
 #pragma once
 
-// botan
-#include "botan_all.h"
-
 // other
 #include <iostream>
 #include <stdio.h>
-#include "FileIO.h"
+#include "IO/FileIO.h"
 #include "Account/AccountDefinitions.h"
-#include "GPD/XDBFDefininitions.h"
+#include "Gpd/XdbfDefininitions.h"
 #include "Stfs/StfsConstants.h"
+
+// botan
+#include <botan/botan.h>
+#include <botan/sha160.h>
+#include <botan/hmac.h>
+#include <botan/arc4.h>
 
 #include "XboxInternals_global.h"
 
@@ -121,7 +124,7 @@ public:
     // Description: set the service provider for the player
     void SetOnlineServiceProvider(XboxLiveServiceProvider provider);
 
-    // Description: saves all set data and overwrites the current file
+    // Description: saves all set data and overWrites the current file
     void Save(ConsoleType type = Retail);
 
 private:
@@ -133,7 +136,7 @@ private:
 
 	void parseFile();
 
-	void writeFile();
+	void WriteFile();
 
     void decryptAccount(std::string encryptedPath, std::string *outPath, ConsoleType type);
     void encryptAccount(std::string decryptedPath, ConsoleType type, std::string *outPath = NULL);

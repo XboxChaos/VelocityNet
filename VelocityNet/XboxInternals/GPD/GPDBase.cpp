@@ -1,22 +1,22 @@
-#include "GPDBase.h"
+#include "GpdBase.h"
 
 
-GPDBase::GPDBase(string path) : ioPassedIn(false)
+GpdBase::GpdBase(string path) : ioPassedIn(false)
 {
     io = new FileIO(path);
-    xdbf = new XDBF(io);
+    xdbf = new Xdbf(io);
 
     init();
 }
 
-GPDBase::GPDBase(FileIO *io) : ioPassedIn(true), io(io)
+GpdBase::GpdBase(FileIO *io) : ioPassedIn(true), io(io)
 {
-    xdbf = new XDBF(io);
+    xdbf = new Xdbf(io);
 
     init();
 }
 
-void GPDBase::init()
+void GpdBase::init()
 {
     // read all the images
     for (DWORD i = 0; i < xdbf->images.size(); i++)
@@ -28,8 +28,8 @@ void GPDBase::init()
         image.image = new BYTE[image.length];
 
         // read in the image
-        io->setPosition(xdbf->GetRealAddress(image.entry.addressSpecifier));
-        io->readBytes(image.image, image.length);
+        io->SetPosition(xdbf->GetRealAddress(image.entry.addressSpecifier));
+        io->ReadBytes(image.image, image.length);
 
         // add the image to the vector
         images.push_back(image);
@@ -53,86 +53,83 @@ void GPDBase::init()
     }
 }
 
-wstring GPDBase::readStringEntry(XDBFEntry entry)
+wstring GpdBase::readStringEntry(XdbfEntry entry)
 {
     // ensure that the entry is a string entry
     if (entry.type != String)
-        throw string("XDBF: Error reading string entry. Specified entry isn't a string.\n");
+        throw string("Xdbf: Error reading string entry. Specified entry isn't a string.\n");
 
     // seek to the entry's position
-    io->setPosition(xdbf->GetRealAddress(entry.addressSpecifier));
+    io->SetPosition(xdbf->GetRealAddress(entry.addressSpecifier));
 
     // read the string
-    return io->readWString(entry.length / 2);
+    return io->ReadWString(entry.length / 2);
 }
 
-SettingEntry GPDBase::readSettingEntry(XDBFEntry entry)
+SettingEntry GpdBase::readSettingEntry(XdbfEntry entry)
 {
     // ensure the entry is a setting entry
     if (entry.type != Setting)
-        throw string("XDBF: Error reading setting entry. The entry specified isn't a setting.\n");
+        throw string("Xdbf: Error reading setting entry. The entry specified isn't a setting.\n");
 
     SettingEntry toReturn;
     toReturn.entry = entry;
 
     // seek to the position of the setting entry, skip past the id
     DWORD entryAddr = xdbf->GetRealAddress(entry.addressSpecifier);
-    io->setPosition(entryAddr + 8);
+    io->SetPosition(entryAddr + 8);
 
     // read the setting entry type
-    toReturn.type = (SettingEntryType)io->readByte();
+    toReturn.type = (SettingEntryType)io->ReadByte();
     if (toReturn.type < 0 || toReturn.type > 7)
-    {
-        printf("%llX\n", entry.id);
-        throw string("XDBF: Error reading setting entry. Invalid setting entry type.\n");
-    }
+        throw string("Xdbf: Error reading setting entry. Invalid setting entry type.\n");
 
     // skip past the nonsense
-    io->setPosition(entryAddr + 0x10);
+    io->SetPosition(entryAddr + 0x10);
 
     switch (toReturn.type)
     {
         case Context:
-            io->setPosition(entryAddr);
+            io->SetPosition(entryAddr);
 
             toReturn.binaryData.data = new BYTE[entry.length];
             toReturn.binaryData.length = entry.length;
 
-            io->readBytes(toReturn.binaryData.data, entry.length);
+            io->ReadBytes(toReturn.binaryData.data, entry.length);
             break;
         case Int32:
-            toReturn.int32 = io->readInt32();
+            toReturn.int32 = io->ReadInt32();
             break;
         case Int64:
-            toReturn.int64 = io->readInt64();
+            toReturn.int64 = io->ReadInt64();
             break;
         case Double:
         {
-            toReturn.doubleData = io->readDouble();
+            toReturn.doubleData = io->ReadDouble();
             break;
         }
         case UnicodeString:
         {
-            DWORD strLen = io->readDword();
-            io->setPosition(entryAddr + 0x18);
-            toReturn.str = new wstring(io->readWString(strLen));
+            DWORD strLen = io->ReadDword();
+            io->SetPosition(entryAddr + 0x18);
+            toReturn.str = new wstring(io->ReadWString(strLen));
             break;
         }
         case Float:
         {
-            toReturn.floatData = io->readFloat();
+            toReturn.floatData = io->ReadFloat();
             break;
         }
         case Binary:
-            toReturn.binaryData.length = io->readDword();
-            io->setPosition(entryAddr + 0x18);
+            toReturn.binaryData.length = io->ReadDword();
+            io->SetPosition(entryAddr + 0x18);
             toReturn.binaryData.data = new BYTE[toReturn.binaryData.length];
-            io->readBytes(toReturn.binaryData.data, toReturn.binaryData.length);
+            io->ReadBytes(toReturn.binaryData.data, toReturn.binaryData.length);
             break;
         case TimeStamp:
         {
-            WINFILETIME time = { io->readDword(), io->readDword() };
-            toReturn.timeStamp = XDBFHelpers::FILETIMEtoTimeT(time);
+            WINFILETIME time = { io->ReadDword(), io->ReadDword() };
+            toReturn.timeStamp = XdbfHelpers::FILETIMEtoTimeT(time);
             break;
         }
     }
@@ -140,7 +137,7 @@ SettingEntry GPDBase::readSettingEntry(XDBFEntry entry)
     return toReturn;
 }
 
-void GPDBase::DeleteSettingEntry(SettingEntry setting)
+void GpdBase::DeleteSettingEntry(SettingEntry setting)
 {
     // remove the entry from the list
     DWORD i;
@@ -153,13 +150,13 @@ void GPDBase::DeleteSettingEntry(SettingEntry setting)
         }
     }
     if (i > settings.size())
-        throw string("GPD: Error deleting setting entry. Setting doesn't exist.\n");
+        throw string("Gpd: Error deleting setting entry. Setting doesn't exist.\n");
 
     // delete the entry from the file
     xdbf->DeleteEntry(setting.entry);
 }
 
-void GPDBase::DeleteImageEntry(ImageEntry image)
+void GpdBase::DeleteImageEntry(ImageEntry image)
 {
     // remove the entry from the list
     DWORD i;
@@ -172,13 +169,13 @@ void GPDBase::DeleteImageEntry(ImageEntry image)
         }
     }
     if (i > images.size())
-        throw string("GPD: Error deleting image entry. Image doesn't exist.\n");
+        throw string("Gpd: Error deleting image entry. Image doesn't exist.\n");
 
     // delete the entry from the file
     xdbf->DeleteEntry(image.entry);
 }
 
-void GPDBase::CreateSettingEntry(SettingEntry *setting, UINT64 entryID)
+void GpdBase::CreateSettingEntry(SettingEntry *setting, UINT64 entryID)
 {
     DWORD entryLen = 0;
     switch (setting->type)
@@ -200,7 +197,7 @@ void GPDBase::CreateSettingEntry(SettingEntry *setting, UINT64 entryID)
         entryLen = 0x18 + (setting->binaryData.length * 2);
         break;
     default:
-        throw string("GPD: Error creating setting entry. Invalid setting entry type.\n");
+        throw string("Gpd: Error creating setting entry. Invalid setting entry type.\n");
     }
 
     // create the xdbf entry
@@ -209,38 +206,38 @@ void GPDBase::CreateSettingEntry(SettingEntry *setting, UINT64 entryID)
     // add the new setting entry to the list
     settings.push_back(*setting);
 
-    // write the setting
+    // Write the setting
     WriteSettingEntry(*setting);
 }
 
-void GPDBase::CreateImageEntry(ImageEntry *image, UINT64 entryID)
+void GpdBase::CreateImageEntry(ImageEntry *image, UINT64 entryID)
 {
-    // create XDBF entry
+    // create Xdbf entry
     image->initialLength = image->length;
     image->entry = xdbf->CreateEntry(Image, entryID, image->length);
 
     // add the new entry to the list
     images.push_back(*image);
 
-    // write the image
+    // Write the image
     WriteImageEntry(*image);
 }
 
-void GPDBase::WriteSettingEntry(SettingEntry setting)
+void GpdBase::WriteSettingEntry(SettingEntry setting)
 {
     // get the address of the entry in the file
     DWORD entryAddr = xdbf->GetRealAddress(setting.entry.addressSpecifier);
 
-    // write the setting entry header
-    io->setPosition(entryAddr);
-    io->write((DWORD)setting.entry.id);
-    io->setPosition(entryAddr + 8);
-    io->write((BYTE)setting.type);
+    // Write the setting entry header
+    io->SetPosition(entryAddr);
+    io->Write((DWORD)setting.entry.id);
+    io->SetPosition(entryAddr + 8);
+    io->Write((BYTE)setting.type);
 
-    io->setPosition(entryAddr + 0x10);
-    io->flush();
+    io->SetPosition(entryAddr + 0x10);
+    io->Flush();
 
-    // write setting
+    // Write setting
     switch (setting.type)
     {
         case Context:
@@ -253,23 +250,23 @@ void GPDBase::WriteSettingEntry(SettingEntry setting)
                 entryAddr = xdbf->AllocateMemory(setting.entry.length);
                 setting.entry.addressSpecifier = xdbf->GetSpecifier(entryAddr);
             }
-            io->setPosition(entryAddr);
-            io->write(setting.binaryData.data, setting.binaryData.length);
+            io->SetPosition(entryAddr);
+            io->Write(setting.binaryData.data, setting.binaryData.length);
             break;
         }
         case Int32:
         case Float:
-            io->write((DWORD)setting.int32);
+            io->Write((DWORD)setting.int32);
             break;
         case Int64:
         case Double:
-            io->write((UINT64)setting.int64);
+            io->Write((UINT64)setting.int64);
             break;
         case TimeStamp:
         {
-            WINFILETIME time = XDBFHelpers::TimeTtoFILETIME(setting.timeStamp);
-            io->write(time.dwHighDateTime);
-            io->write(time.dwLowDateTime);
+            WINFILETIME time = XdbfHelpers::TimeTtoFILETIME(setting.timeStamp);
+            io->Write(time.dwHighDateTime);
+            io->Write(time.dwLowDateTime);
             break;
         }
         case UnicodeString:
@@ -283,15 +280,15 @@ void GPDBase::WriteSettingEntry(SettingEntry setting)
                 entryAddr = xdbf->AllocateMemory(setting.entry.length);
                 setting.entry.addressSpecifier = xdbf->GetSpecifier(entryAddr);
 
-                io->setPosition(entryAddr);
-                io->write((DWORD)setting.entry.id);
-                io->write((DWORD)0);
-                io->write((BYTE)setting.type);
-                io->setPosition(entryAddr + 0x10);
+                io->SetPosition(entryAddr);
+                io->Write((DWORD)setting.entry.id);
+                io->Write((DWORD)0);
+                io->Write((BYTE)setting.type);
+                io->SetPosition(entryAddr + 0x10);
             }
-            io->write((DWORD)((setting.str->size() + 1) * 2));
-            io->write((DWORD)0);
-            io->write(*setting.str);
+            io->Write((DWORD)((setting.str->size() + 1) * 2));
+            io->Write((DWORD)0);
+            io->Write(*setting.str);
             break;
         }
         case Binary:
@@ -304,25 +301,25 @@ void GPDBase::WriteSettingEntry(SettingEntry setting)
                 entryAddr = xdbf->AllocateMemory(setting.entry.length);
                 setting.entry.addressSpecifier = xdbf->GetSpecifier(entryAddr);
 
-                io->setPosition(entryAddr);
-                io->write((DWORD)setting.entry.id);
-                io->setPosition(entryAddr + 8);
-                io->write((BYTE)setting.type);
-                io->setPosition(entryAddr + 0x10);
+                io->SetPosition(entryAddr);
+                io->Write((DWORD)setting.entry.id);
+                io->SetPosition(entryAddr + 8);
+                io->Write((BYTE)setting.type);
+                io->SetPosition(entryAddr + 0x10);
             }
-            io->write(setting.binaryData.length);
-            io->write((DWORD)0);
-            io->write(setting.binaryData.data, setting.binaryData.length);
+            io->Write(setting.binaryData.length);
+            io->Write((DWORD)0);
+            io->Write(setting.binaryData.data, setting.binaryData.length);
             break;
     }
 
     if (setting.entry.id != GamercardTitleAchievementsEarned && setting.entry.id != GamercardTitleCredEarned && setting.entry.id != GamercardCred && setting.entry.id != GamercardAchievementsEarned)
         xdbf->UpdateEntry(&setting.entry);
 
-    io->flush();
+    io->Flush();
 }
 
-void GPDBase::WriteImageEntry(ImageEntry image)
+void GpdBase::WriteImageEntry(ImageEntry image)
 {
     // allocate memory if needed
     if (image.length != image.initialLength)
@@ -332,24 +329,24 @@ void GPDBase::WriteImageEntry(ImageEntry image)
         image.entry.addressSpecifier = xdbf->GetSpecifier(xdbf->AllocateMemory(image.entry.length));
     }
 
-    // write the image
-    io->setPosition(xdbf->GetRealAddress(image.entry.addressSpecifier));
-    io->write(image.image, image.length);
+    // Write the image
+    io->SetPosition(xdbf->GetRealAddress(image.entry.addressSpecifier));
+    io->Write(image.image, image.length);
 }
 
-void GPDBase::Close()
+void GpdBase::Close()
 {
     if (io)
-        io->close();
+        io->Close();
 }
 
-void GPDBase::Clean()
+void GpdBase::Clean()
 {
     xdbf->Clean();
     io = xdbf->io;
 }
 
-SettingEntry GPDBase::GetSetting(UINT64 id)
+SettingEntry GpdBase::GetSetting(UINT64 id)
 {
     for (DWORD i = 0; i < settings.size(); i++)
         if (settings.at(i).entry.id == id)
@@ -357,7 +354,7 @@ SettingEntry GPDBase::GetSetting(UINT64 id)
     return SettingEntry();
 }
 
-GPDBase::~GPDBase(void)
+GpdBase::~GpdBase(void)
 {
     // deallocate all of the image memory
     for (DWORD i = 0; i < images.size(); i++)

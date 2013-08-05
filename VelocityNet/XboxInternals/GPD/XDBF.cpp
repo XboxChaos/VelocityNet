@@ -1,7 +1,7 @@
-#include "XDBF.h"
+#include "Xdbf.h"
 #include <stdio.h>
 
-XDBF::XDBF(string gpdPath) : ioPassedIn(false)
+Xdbf::Xdbf(string gpdPath) : ioPassedIn(false)
 {
     io = new FileIO(gpdPath);
 
@@ -11,70 +11,85 @@ XDBF::XDBF(string gpdPath) : ioPassedIn(false)
     readFreeMemoryTable();
 }
 
-XDBF::XDBF(FileIO *io) : ioPassedIn(true)
+Xdbf::Xdbf(FileIO *io) : ioPassedIn(true), io(io)
 {
-    this->io = io;
-
     init();
     readHeader();
     readEntryTable();
     readFreeMemoryTable();
 }
 
-void XDBF::Clean()
+void Xdbf::Clean()
 {
-    // create a temporary file to write the old GPD's used memory to
-    char *tempFileName = tmpnam(NULL);
-    FileIO tempFile(string((char*)tempFileName), true);
+    // create a temporary file to Write the old Gpd's used memory to
+    string tempFileName;
 
-    // write the old header
-    tempFile.setPosition(0);
-    tempFile.write(header.magic);
-    tempFile.write(header.version);
-    tempFile.write(header.entryTableLength);
-    tempFile.write(header.entryCount);
-    tempFile.write(header.freeMemTableLength);
-    tempFile.write((DWORD)1);
+#ifdef _WIN32
+    // Opening a file using the path returned by tmpnam() may result in a "permission denied" error on Windows.
+    // Not sure why it happens but tweaking the manifest/UAC properties makes a difference.
+    char *tempFileName_c = _tempnam(NULL, NULL);
+    if (!tempFileName_c)
+        throw string("Xdbf: Failed to generate temporary file name.\n");
+    tempFileName = string(tempFileName_c);
+    free(tempFileName_c);
+    tempFileName_c = NULL;
+#else
+    char tempFileName_c[L_tmpnam];
+    if (!tmpnam(tempFileName_c))
+        throw string("Xdbf: Failed to generate temporary file name.\n");
+    tempFileName = string(tempFileName_c);
+#endif
+
+    FileIO tempFile(tempFileName.c_str(), true);
+
+    // Write the old header
+    tempFile.SetPosition(0);
+    tempFile.Write(header.magic);
+    tempFile.Write(header.version);
+    tempFile.Write(header.entryTableLength);
+    tempFile.Write(header.entryCount);
+    tempFile.Write(header.freeMemTableLength);
+    tempFile.Write((DWORD)1);
 
     // seek to the first position in the file where data can be written
-    tempFile.setPosition(GetRealAddress(0) - 1);
-    tempFile.write((BYTE)0);
+    tempFile.SetPosition(GetRealAddress(0) - 1);
+    tempFile.Write((BYTE)0);
 
-    tempFile.flush();
+    tempFile.Flush();
 
-    // write all of the achievements
-    writeNewEntryGroup(&achievements, &tempFile);
+    // Write all of the achievements
+    WriteNewEntryGroup(&achievements, &tempFile);
 
-    // write all of the images
-    writeNewEntryGroup(&images, &tempFile);
+    // Write all of the images
+    WriteNewEntryGroup(&images, &tempFile);
 
-    // write all of the settings
-    writeNewEntryGroup(&settings, &tempFile);
+    // Write all of the settings
+    WriteNewEntryGroup(&settings, &tempFile);
 
-    // write all of the title entries
-    writeNewEntryGroup(&titlesPlayed, &tempFile);
+    // Write all of the title entries
+    WriteNewEntryGroup(&titlesPlayed, &tempFile);
 
-    // write all of the strings
-    writeNewEntryGroup(&strings, &tempFile);
+    // Write all of the strings
+    WriteNewEntryGroup(&strings, &tempFile);
 
-    // write all of the achievements
-    writeNewEntryGroup(&avatarAwards, &tempFile);
+    // Write all of the achievements
+    WriteNewEntryGroup(&avatarAwards, &tempFile);
 
-    tempFile.close();
-    io->close();
+    tempFile.Close();
+    io->Close();
 
     // delete the original file
-    remove(io->getFilePath().c_str());
+    remove(io->GetFilePath().c_str());
 
     // move the temp file to the old file's location
-    rename(tempFileName, io->getFilePath().c_str());
+    rename(tempFileName.c_str(), io->GetFilePath().c_str());
 
-    string path = io->getFilePath();
+    string path = io->GetFilePath();
     delete io;
     io = new FileIO(path);
 
-    // write the updated entry table
-    writeEntryListing();
+    // Write the updated entry table
+    WriteEntryListing();
 
     // clear all of the existing entries
     achievements.entries.clear();
@@ -87,103 +102,103 @@ void XDBF::Clean()
     // clear the free memory
     freeMemory.clear();
 
-    io->setPosition(0, ios_base::end);
-    XDBFFreeMemEntry  entry = { GetSpecifier(io->getPosition()), 0xFFFFFFFF - GetSpecifier(io->getPosition()) };
+    io->SetPosition(0, ios_base::end);
+    XdbfFreeMemEntry  entry = { GetSpecifier(io->GetPosition()), 0xFFFFFFFF - GetSpecifier(io->GetPosition()) };
     freeMemory.push_back(entry);
 
-    writeFreeMemTable();
+    WriteFreeMemTable();
 
     // reload the file listing
     readEntryTable();
 }
 
-void XDBF::writeNewEntryGroup(XDBFEntryGroup *group, FileIO *newIO)
+void Xdbf::WriteNewEntryGroup(XdbfEntryGroup *group, FileIO *newIO)
 {
     // iterate through all of the entries
     for (DWORD i = 0; i < group->entries.size(); i++)
-        writeNewEntry(&group->entries.at(i), newIO);
+        WriteNewEntry(&group->entries.at(i), newIO);
 
-    // write the sync crap
-    writeNewEntry(&group->syncs.entry, newIO);
-    writeNewEntry(&group->syncData.entry, newIO);
+    // Write the sync crap
+    WriteNewEntry(&group->syncs.entry, newIO);
+    WriteNewEntry(&group->syncData.entry, newIO);
 }
 
-void XDBF::writeNewEntryGroup(vector<XDBFEntry> *group, FileIO *newIO)
+void Xdbf::WriteNewEntryGroup(vector<XdbfEntry> *group, FileIO *newIO)
 {
     // iterate through all of the entries
     for (DWORD i = 0; i < group->size(); i++)
-        writeNewEntry(&group->at(i), newIO);
+        WriteNewEntry(&group->at(i), newIO);
 }
 
-void XDBF::writeNewEntry(XDBFEntry *entry, FileIO *newIO)
+void Xdbf::WriteNewEntry(XdbfEntry *entry, FileIO *newIO)
 {
     // read in the entry data
     BYTE *buffer = new BYTE[entry->length];
-    io->setPosition(GetRealAddress(entry->addressSpecifier));
-    io->readBytes(buffer, entry->length);
+    io->SetPosition(GetRealAddress(entry->addressSpecifier));
+    io->ReadBytes(buffer, entry->length);
 
     // update the entry address
-    entry->addressSpecifier = GetSpecifier((DWORD)newIO->getPosition());
+    entry->addressSpecifier = GetSpecifier((DWORD)newIO->GetPosition());
 
-    // write the entry data
-    newIO->write(buffer, entry->length);
+    // Write the entry data
+    newIO->Write(buffer, entry->length);
 
     delete[] buffer;
 }
 
-void XDBF::init()
+void Xdbf::init()
 {
     achievements.syncs.lengthChanged = false;
     settings.syncs.lengthChanged = false;
     titlesPlayed.syncs.lengthChanged = false;
     avatarAwards.syncs.lengthChanged = false;
 
-    memset(&achievements.syncs.entry, 0, sizeof(XDBFEntry));
-    memset(&settings.syncs.entry, 0, sizeof(XDBFEntry));
-    memset(&titlesPlayed.syncs.entry, 0, sizeof(XDBFEntry));
-    memset(&avatarAwards.syncs.entry, 0, sizeof(XDBFEntry));
+    memset(&achievements.syncs.entry, 0, sizeof(XdbfEntry));
+    memset(&settings.syncs.entry, 0, sizeof(XdbfEntry));
+    memset(&titlesPlayed.syncs.entry, 0, sizeof(XdbfEntry));
+    memset(&avatarAwards.syncs.entry, 0, sizeof(XdbfEntry));
 
-    memset(&achievements.syncData.entry, 0, sizeof(XDBFEntry));
-    memset(&settings.syncData.entry, 0, sizeof(XDBFEntry));
-    memset(&titlesPlayed.syncData.entry, 0, sizeof(XDBFEntry));
-    memset(&avatarAwards.syncData.entry, 0, sizeof(XDBFEntry));
+    memset(&achievements.syncData.entry, 0, sizeof(XdbfEntry));
+    memset(&settings.syncData.entry, 0, sizeof(XdbfEntry));
+    memset(&titlesPlayed.syncData.entry, 0, sizeof(XdbfEntry));
+    memset(&avatarAwards.syncData.entry, 0, sizeof(XdbfEntry));
 }
 
-XDBF::~XDBF()
+Xdbf::~Xdbf()
 {
     if (!ioPassedIn)
-        io->close();
+        io->Close();
 }
 
-void XDBF::readHeader()
+void Xdbf::readHeader()
 {
     // seek to the begining of the file
-    io->setPosition(0);
+    io->SetPosition(0);
 
     // ensure the magic is correct
-    header.magic = io->readDword();
+    header.magic = io->ReadDword();
     if (header.magic != 0x58444246)
-        throw string("XDBF: Invalid magic.\n");
+        throw string("Xdbf: Invalid magic.\n");
 
     // read in the rest of the header
-    header.version = io->readDword();
-    header.entryTableLength = io->readDword();
-    header.entryCount = io->readDword();
-    header.freeMemTableLength = io->readDword();
-    header.freeMemTableEntryCount = io->readDword();
+    header.version = io->ReadDword();
+    header.entryTableLength = io->ReadDword();
+    header.entryCount = io->ReadDword();
+    header.freeMemTableLength = io->ReadDword();
+    header.freeMemTableEntryCount = io->ReadDword();
 
     // make sure that there is at least free mem table 1 entry
     if (header.freeMemTableEntryCount == 0)
     {
         header.freeMemTableEntryCount = 1;
-        writeHeader();
+        WriteHeader();
     }
 }
 
-void XDBF::readEntryTable()
+void Xdbf::readEntryTable()
 {
     // seek to the begining of the entry table
-    io->setPosition(0x18);
+    io->SetPosition(0x18);
 
     // read achievement table entries
     readEntryGroup(&achievements, Achievement);
@@ -204,67 +219,67 @@ void XDBF::readEntryTable()
     readEntryGroup(&avatarAwards, AvatarAward);
 }
 
-SyncData XDBF::readSyncData(XDBFEntry entry)
+SyncData Xdbf::readSyncData(XdbfEntry entry)
 {
     // make sure the entry passed in is sync data
     if (entry.type == Image || entry.type == String || (entry.id != 0x200000000 && entry.id != 2))
-        throw string("XDBF: Error reading sync list. Specified entry isn't a sync list.\n");
+        throw string("Xdbf: Error reading sync list. Specified entry isn't a sync list.\n");
 
     // preserve io position
-    DWORD pos = (DWORD)io->getPosition();
+    DWORD pos = (DWORD)io->GetPosition();
 
     SyncData data;
     data.entry = entry;
 
     // seek to the sync data entry in the file
-    io->setPosition(GetRealAddress(entry.addressSpecifier));
+    io->SetPosition(GetRealAddress(entry.addressSpecifier));
 
     // read the data
-    data.nextSyncID = io->readUInt64();
-    data.lastSyncID = io->readUInt64();
+    data.nextSyncID = io->ReadUInt64();
+    data.lastSyncID = io->ReadUInt64();
 
-    WINFILETIME time = { io->readDword(), io->readDword() };
-    data.lastSyncedTime = (tm*)XDBFHelpers::FILETIMEtoTimeT(time);
+    WINFILETIME time = { io->ReadDword(), io->ReadDword() };
+    data.lastSyncedTime = (tm*)XdbfHelpers::FILETIMEtoTimeT(time);
 
-    io->setPosition(pos);
+    io->SetPosition(pos);
 
     return data;
 }
 
-void XDBF::writeSyncData(SyncData *data)
+void Xdbf::WriteSyncData(SyncData *data)
 {
     // seek to the sync data position
-    io->setPosition(GetRealAddress(data->entry.addressSpecifier));
+    io->SetPosition(GetRealAddress(data->entry.addressSpecifier));
 
-    io->write(data->nextSyncID);
-    io->write(data->lastSyncID);
+    io->Write(data->nextSyncID);
+    io->Write(data->lastSyncID);
 
-    // write the last time synced
-    WINFILETIME lastSynced = XDBFHelpers::TimeTtoFILETIME((time_t)data->lastSyncedTime);
-    io->write(lastSynced.dwHighDateTime);
-    io->write(lastSynced.dwLowDateTime);
+    // Write the last time synced
+    WINFILETIME lastSynced = XdbfHelpers::TimeTtoFILETIME((time_t)data->lastSyncedTime);
+    io->Write(lastSynced.dwHighDateTime);
+    io->Write(lastSynced.dwLowDateTime);
 }
 
-SyncList XDBF::readSyncList(XDBFEntry entry)
+SyncList Xdbf::readSyncList(XdbfEntry entry)
 {
     // make sure the entry passed in is a sync list
     if (entry.type == Image || entry.type == String || (entry.id != 0x100000000 && entry.id != 1))
-        throw string("XDBF: Error reading sync list. Specified entry isn't a sync list.\n");
+        throw string("Xdbf: Error reading sync list. Specified entry isn't a sync list.\n");
 
     // preserve io position
-    DWORD pos = (DWORD)io->getPosition();
+    DWORD pos = (DWORD)io->GetPosition();
 
     SyncList toReturn;
     toReturn.entry = entry;
 
     // seek to the begining of the entry
-    io->setPosition(GetRealAddress(entry.addressSpecifier));
+    io->SetPosition(GetRealAddress(entry.addressSpecifier));
 
     // iterate through all the syncs
     for (DWORD i = 0; i < (entry.length / 16); i++)
     {
         // read in the sync
-        SyncEntry sync = { io->readUInt64(), io->readUInt64() };
+        SyncEntry sync = { io->ReadUInt64(), io->ReadUInt64() };
 
         // if the sync value is 0, then it was already synced
         if (sync.syncValue == 0)
@@ -273,12 +288,12 @@ SyncList XDBF::readSyncList(XDBFEntry entry)
             toReturn.toSync.push_back(sync);
     }
 
-    io->setPosition(pos);
+    io->SetPosition(pos);
 
     return toReturn;
 }
 
-void XDBF::writeSyncList(SyncList *syncs)
+void Xdbf::WriteSyncList(SyncList *syncs)
 {
     // if the length has changed, then we need to allocated more/less memory
     if (syncs->lengthChanged)
@@ -295,53 +310,53 @@ void XDBF::writeSyncList(SyncList *syncs)
     }
 
     // seek to the sync list position
-    io->setPosition(GetRealAddress(syncs->entry.addressSpecifier));
+    io->SetPosition(GetRealAddress(syncs->entry.addressSpecifier));
 
-    // write the synced ones
+    // Write the synced ones
     for (DWORD i = 0; i < syncs->synced.size(); i++)
     {
-        io->write(syncs->synced.at(i).entryID);
-        io->write(syncs->synced.at(i).syncValue);
+        io->Write(syncs->synced.at(i).entryID);
+        io->Write(syncs->synced.at(i).syncValue);
     }
 
-    // write the toSync ones
+    // Write the toSync ones
     for (int i = 0; i < syncs->toSync.size(); i++)
     {
-        io->write(syncs->toSync.at(i).entryID);
-        io->write(syncs->toSync.at(i).syncValue);
+        io->Write(syncs->toSync.at(i).entryID);
+        io->Write(syncs->toSync.at(i).syncValue);
     }
 }
 
-void XDBF::readFreeMemoryTable()
+void Xdbf::readFreeMemoryTable()
 {
     // seek to the begining of the free memory table
     DWORD tableStartAddr = 0x18 + (header.entryTableLength * 0x12);
-    io->setPosition(tableStartAddr);
+    io->SetPosition(tableStartAddr);
 
     // iterate through all of the free memory table entries
     for (DWORD i = 0; i < header.freeMemTableEntryCount; i++)
     {
-        XDBFFreeMemEntry entry = { io->readDword(), io->readDword() };
+        XdbfFreeMemEntry entry = { io->ReadDword(), io->ReadDword() };
         freeMemory.push_back(entry);
     }
 }
 
-DWORD XDBF::GetRealAddress(DWORD specifier)
+DWORD Xdbf::GetRealAddress(DWORD specifier)
 {
     return specifier + (header.entryTableLength * 0x12) + (header.freeMemTableLength * 8) + 0x18;
 }
 
-DWORD XDBF::GetSpecifier(DWORD address)
+DWORD Xdbf::GetSpecifier(DWORD address)
 {
     DWORD headerSize = (header.entryTableLength * 0x12) + (header.freeMemTableLength * 8) + 0x18;
     if (address < headerSize)
-        throw string("XDBF: Invalid address for converting.\n");
+        throw string("Xdbf: Invalid address for converting.\n");
     return address - headerSize;
 }
 
-XDBFEntry XDBF::CreateEntry(EntryType type, UINT64 id, DWORD size)
+XdbfEntry Xdbf::CreateEntry(EntryType type, UINT64 id, DWORD size)
 {
-    XDBFEntry entry = { type, id, 0, size };
+    XdbfEntry entry = { type, id, 0, size };
 
     header.entryCount++;
 
@@ -349,15 +364,15 @@ XDBFEntry XDBF::CreateEntry(EntryType type, UINT64 id, DWORD size)
     {
         // allocate memory for the entry
         entry.addressSpecifier = GetSpecifier(AllocateMemory(size));
-        writeEntryListing();
+        WriteEntryListing();
 
-        writeHeader();
+        WriteHeader();
 
         return entry;
     }
 
     // make sure the entry doesn't already exist
-    vector<XDBFEntry> *entries;
+    vector<XdbfEntry> *entries;
     switch (entry.type)
     {
         case Achievement:
@@ -379,11 +394,11 @@ XDBFEntry XDBF::CreateEntry(EntryType type, UINT64 id, DWORD size)
             entries = &avatarAwards.entries;
             break;
         default:
-            throw string("XDBF: Error creating entry. Invalid entry type.\n");
+            throw string("Xdbf: Error creating entry. Invalid entry type.\n");
     }
     for (DWORD i = 0; i < entries->size(); i++)
         if (entries->at(i).id == entry.id)
-            throw string("XDBF: Error creating entry. Entry already exists.\n");
+            throw string("Xdbf: Error creating entry. Entry already exists.\n");
 
     // allocate memory for the entry
     entry.addressSpecifier = GetSpecifier(AllocateMemory(size));
@@ -399,9 +414,9 @@ XDBFEntry XDBF::CreateEntry(EntryType type, UINT64 id, DWORD size)
             SyncEntry sync = { entry.id, achievements.syncData.nextSyncID++ };
             achievements.syncs.toSync.push_back(sync);
             achievements.syncs.lengthChanged = true;
-            // re-write the sync list
-            writeSyncList(&achievements.syncs);
-            writeSyncData(&achievements.syncData);
+            // re-Write the sync list
+            WriteSyncList(&achievements.syncs);
+            WriteSyncData(&achievements.syncData);
             break;
         }
         case Image:
@@ -422,9 +437,9 @@ XDBFEntry XDBF::CreateEntry(EntryType type, UINT64 id, DWORD size)
             settings.syncs.toSync.push_back(sync);
             settings.syncs.lengthChanged = true;
 
-            // re-write the sync list
-            writeSyncList(&settings.syncs);
-            writeSyncData(&settings.syncData);
+            // re-Write the sync list
+            WriteSyncList(&settings.syncs);
+            WriteSyncData(&settings.syncData);
             break;
         }
         case Title:
@@ -435,9 +450,9 @@ XDBFEntry XDBF::CreateEntry(EntryType type, UINT64 id, DWORD size)
             SyncEntry sync = { entry.id, titlesPlayed.syncData.nextSyncID++ };
             titlesPlayed.syncs.toSync.push_back(sync);
             titlesPlayed.syncs.lengthChanged = true;
-            // re-write the sync list
-            writeSyncList(&titlesPlayed.syncs);
-            writeSyncData(&titlesPlayed.syncData);
+            // re-Write the sync list
+            WriteSyncList(&titlesPlayed.syncs);
+            WriteSyncData(&titlesPlayed.syncData);
             break;
         }
         case String:
@@ -451,21 +466,21 @@ XDBFEntry XDBF::CreateEntry(EntryType type, UINT64 id, DWORD size)
             SyncEntry sync = { entry.id, avatarAwards.syncData.nextSyncID++ };
             avatarAwards.syncs.toSync.push_back(sync);
             avatarAwards.syncs.lengthChanged = true;
-            // re-write the sync list
-            writeSyncList(&avatarAwards.syncs);
-            writeSyncData(&avatarAwards.syncData);
+            // re-Write the sync list
+            WriteSyncList(&avatarAwards.syncs);
+            WriteSyncData(&avatarAwards.syncData);
             break;
         }
     }
 
-    writeEntryListing();
+    WriteEntryListing();
 
-    writeHeader();
+    WriteHeader();
 
     return entry;
 }
 
-DWORD XDBF::AllocateMemory(DWORD size)
+DWORD Xdbf::AllocateMemory(DWORD size)
 {
     if (size == 0)
         return GetRealAddress(0);
@@ -481,16 +496,16 @@ DWORD XDBF::AllocateMemory(DWORD size)
     if (index == (freeMemory.size() - 1))
     {
         // get the position in the file of the memory allocated
-        io->setPosition(0, ios_base::end);
-        toReturn = (DWORD)io->getPosition();
+        io->SetPosition(0, ios_base::end);
+        toReturn = (DWORD)io->GetPosition();
 
-        io->flush();
-        io->setPosition(size - 1, ios_base::end);
-        io->write((BYTE)0);
-        io->flush();
+        io->Flush();
+        io->SetPosition(size - 1, ios_base::end);
+        io->Write((BYTE)0);
+        io->Flush();
 
         updateFreeMemTable();
-        writeFreeMemTable();
+        WriteFreeMemTable();
     }
     else
     {
@@ -498,7 +513,7 @@ DWORD XDBF::AllocateMemory(DWORD size)
         toReturn = GetRealAddress(freeMemory.at(index).addressSpecifier);
 
         // erase the entry used from the vector
-        XDBFFreeMemEntry temp = freeMemory.at(index);
+        XdbfFreeMemEntry temp = freeMemory.at(index);
         freeMemory.erase(freeMemory.begin() + index);
 
         // update the header
@@ -509,20 +524,20 @@ DWORD XDBF::AllocateMemory(DWORD size)
             DeallocateMemory(GetRealAddress(temp.addressSpecifier + size), temp.length - size);
 
         // update what needs to be updated
-        writeFreeMemTable();
-        writeHeader();
+        WriteFreeMemTable();
+        WriteHeader();
     }
 
     return toReturn;
 }
 
-void XDBF::DeallocateMemory(DWORD addr, DWORD size)
+void Xdbf::DeallocateMemory(DWORD addr, DWORD size)
 {
     if (size == 0)
         return;
 
     // create a new free mem table entry
-    XDBFFreeMemEntry entry;
+    XdbfFreeMemEntry entry;
     entry.addressSpecifier = GetSpecifier(addr);
     entry.length = size;
 
@@ -534,21 +549,21 @@ void XDBF::DeallocateMemory(DWORD addr, DWORD size)
     updateFreeMemTable();
 
     // update the table
-    writeFreeMemTable();
+    WriteFreeMemTable();
 }
 
-void XDBF::updateFreeMemTable()
+void Xdbf::updateFreeMemTable()
 {
-    io->setPosition(0, ios_base::end);
-    DWORD len = GetSpecifier(io->getPosition());
+    io->SetPosition(0, ios_base::end);
+    DWORD len = GetSpecifier(io->GetPosition());
 
     freeMemory.back().addressSpecifier = len;
     freeMemory.back().length = 0xFFFFFFFF - len;
 }
 
-void XDBF::readEntryGroup(XDBFEntryGroup *group, EntryType type)
+void Xdbf::readEntryGroup(XdbfEntryGroup *group, EntryType type)
 {
-    XDBFEntry entry = { (EntryType)io->readInt16(), io->readUInt64(), io->readDword(), io->readDword() };
+    XdbfEntry entry = { (EntryType)io->ReadInt16(), io->ReadUInt64(), io->ReadDword(), io->ReadDword() };
     group->syncData.entry.type = (EntryType)0;
     group->syncs.entry.type = (EntryType)0;
 
@@ -561,26 +576,26 @@ void XDBF::readEntryGroup(XDBFEntryGroup *group, EntryType type)
         else
             group->entries.push_back(entry);
 
-        entry.type = (EntryType)io->readInt16();
-        entry.id = io->readUInt64();
-        entry.addressSpecifier = io->readDword();
-        entry.length = io->readDword();
+        entry.type = (EntryType)io->ReadInt16();
+        entry.id = io->ReadUInt64();
+        entry.addressSpecifier = io->ReadDword();
+        entry.length = io->ReadDword();
     }
 
     // back the io up 1 entry
-    io->setPosition((DWORD)io->getPosition() - 0x12);
+    io->SetPosition((DWORD)io->GetPosition() - 0x12);
 }
 
-void XDBF::readEntryGroup(vector<XDBFEntry> *group, EntryType type)
+void Xdbf::readEntryGroup(vector<XdbfEntry> *group, EntryType type)
 {
-    XDBFEntry entry;
+    XdbfEntry entry;
 
     while (true)
     {
-        entry.type = (EntryType)io->readInt16();
-        entry.id = io->readUInt64();
-        entry.addressSpecifier = io->readDword();
-        entry.length = io->readDword();
+        entry.type = (EntryType)io->ReadInt16();
+        entry.id = io->ReadUInt64();
+        entry.addressSpecifier = io->ReadDword();
+        entry.length = io->ReadDword();
 
         if (entry.type != type)
             break;
@@ -588,141 +603,141 @@ void XDBF::readEntryGroup(vector<XDBFEntry> *group, EntryType type)
     }
 
     // back the io up 1 entry
-    io->setPosition((DWORD)io->getPosition() - 0x12);
+    io->SetPosition((DWORD)io->GetPosition() - 0x12);
 }
 
-void XDBF::writeEntryListing()
+void Xdbf::WriteEntryListing()
 {
     // seek to the begining of the entry table
-    io->setPosition(0x18);
+    io->SetPosition(0x18);
 
     // clear the current table
     BYTE buffer[0x12] = {0};
     for (DWORD i = 0; i < header.entryTableLength; i++)
-        io->write(buffer, 0x12);
-    io->setPosition(0x18);
-    io->flush();
+        io->Write(buffer, 0x12);
+    io->SetPosition(0x18);
+    io->Flush();
 
-    // write achievement entries
-    writeEntryGroup(&achievements);
-    io->flush();
+    // Write achievement entries
+    WriteEntryGroup(&achievements);
+    io->Flush();
 
-    // write image entries
-    writeEntryGroup(&images);
-    io->flush();
+    // Write image entries
+    WriteEntryGroup(&images);
+    io->Flush();
 
-    // write setting entries
-    writeEntryGroup(&settings);
-    io->flush();
+    // Write setting entries
+    WriteEntryGroup(&settings);
+    io->Flush();
 
-    // write title entries
-    writeEntryGroup(&titlesPlayed);
-    io->flush();
+    // Write title entries
+    WriteEntryGroup(&titlesPlayed);
+    io->Flush();
 
-    // write string entries
-    writeEntryGroup(&strings);
-    io->flush();
+    // Write string entries
+    WriteEntryGroup(&strings);
+    io->Flush();
 
-    // write avatar award entries
-    writeEntryGroup(&avatarAwards);
-    io->flush();
+    // Write avatar award entries
+    WriteEntryGroup(&avatarAwards);
+    io->Flush();
 
     // just to be safe i guess
-    io->flush();
+    io->Flush();
 }
 
-void XDBF::writeFreeMemTable()
+void Xdbf::WriteFreeMemTable()
 {
     // update the last free memory table entry
-    io->setPosition(0, ios_base::end);
-    DWORD temp = GetSpecifier(io->getPosition());
+    io->SetPosition(0, ios_base::end);
+    DWORD temp = GetSpecifier(io->GetPosition());
     freeMemory.at(freeMemory.size() - 1).addressSpecifier = temp;
     freeMemory.at(freeMemory.size() - 1).length = (0xFFFFFFFF - temp);
 
     // seek to the free memory table position
-    io->setPosition(0x18 + (header.entryTableLength * 0x12));
+    io->SetPosition(0x18 + (header.entryTableLength * 0x12));
 
     // make sure we didn't run out of free memory table space
     if (freeMemory.size() > header.freeMemTableLength)
         Clean();
 
-    // write the table
+    // Write the table
     for (DWORD i = 0; i < freeMemory.size(); i++)
     {
-        io->write(freeMemory.at(i).addressSpecifier);
-        io->write(freeMemory.at(i).length);
+        io->Write(freeMemory.at(i).addressSpecifier);
+        io->Write(freeMemory.at(i).length);
     }
 
     // null out the rest of the table
     for (DWORD i = 0; i < (header.freeMemTableLength - freeMemory.size()); i++)
-        io->write((UINT64)0);
+        io->Write((UINT64)0);
 }
 
-void XDBF::writeHeader()
+void Xdbf::WriteHeader()
 {
-    io->setPosition(0);
-    io->write(header.magic);
-    io->write(header.version);
-    io->write(header.entryTableLength);
-    io->write(header.entryCount);
-    io->write(header.freeMemTableLength);
-    io->write(header.freeMemTableEntryCount);
+    io->SetPosition(0);
+    io->Write(header.magic);
+    io->Write(header.version);
+    io->Write(header.entryTableLength);
+    io->Write(header.entryCount);
+    io->Write(header.freeMemTableLength);
+    io->Write(header.freeMemTableEntryCount);
 }
 
-void XDBF::writeEntryGroup(XDBFEntryGroup *group)
+void Xdbf::WriteEntryGroup(XdbfEntryGroup *group)
 {
     std::sort(group->entries.begin(), group->entries.end(), compareEntries);
 
     if (group->syncs.entry.type == AvatarAward)
     {
-        // write the sync stuffs
+        // Write the sync stuffs
         if (group->syncs.entry.type != 0)
-            writeEntry(&group->syncs.entry);
+            WriteEntry(&group->syncs.entry);
         if (group->syncData.entry.type != 0)
-            writeEntry(&group->syncData.entry);
+            WriteEntry(&group->syncData.entry);
 
-        // write all the entries
+        // Write all the entries
         for (DWORD i = 0; i < group->entries.size(); i++)
-            writeEntry(&group->entries.at(i));
+            WriteEntry(&group->entries.at(i));
     }
     else
     {
-        // write all the entries
+        // Write all the entries
         for (DWORD i = 0; i < group->entries.size(); i++)
-            writeEntry(&group->entries.at(i));
+            WriteEntry(&group->entries.at(i));
 
-        // write the sync stuffs
+        // Write the sync stuffs
         if (group->syncs.entry.type != 0)
-            writeEntry(&group->syncs.entry);
+            WriteEntry(&group->syncs.entry);
         if (group->syncData.entry.type != 0)
-            writeEntry(&group->syncData.entry);
+            WriteEntry(&group->syncData.entry);
     }
 }
 
-void XDBF::writeEntryGroup(vector<XDBFEntry> *group)
+void Xdbf::WriteEntryGroup(vector<XdbfEntry> *group)
 {
     std::sort(group->begin(), group->end(), compareEntries);
 
-    // write all the entries
+    // Write all the entries
     for (DWORD i = 0; i < group->size(); i++)
-        writeEntry(&group->at(i));
+        WriteEntry(&group->at(i));
 }
 
-void XDBF::writeEntry(XDBFEntry *entry)
+void Xdbf::WriteEntry(XdbfEntry *entry)
 {
-    io->write((INT16)entry->type);
-    io->write((UINT64)entry->id);
-    io->write((DWORD)entry->addressSpecifier);
-    io->write((DWORD)entry->length);
+    io->Write((WORD)entry->type);
+    io->Write((UINT64)entry->id);
+    io->Write((DWORD)entry->addressSpecifier);
+    io->Write((DWORD)entry->length);
 }
 
-void XDBF::UpdateEntry(XDBFEntry *entry)
+void Xdbf::UpdateEntry(XdbfEntry *entry)
 {
     // neither of these entry types have syncs
     if (entry->type == Image || entry->type == String)
         return;
 
-    XDBFEntryGroup *group;
+    XdbfEntryGroup *group;
     switch (entry->type)
     {
         case Achievement:
@@ -738,7 +753,7 @@ void XDBF::UpdateEntry(XDBFEntry *entry)
             group = &avatarAwards;
             break;
         default:
-            throw string("XDBF: Error updating entry. Invalid entry type.\n");
+            throw string("Xdbf: Error updating entry. Invalid entry type.\n");
     }
 
     // find the entry in the table and update it
@@ -810,19 +825,19 @@ void XDBF::UpdateEntry(XDBFEntry *entry)
         group->syncs.toSync.push_back(sync);
     }
 
-    // re-write the new sync list
-    writeSyncList(&group->syncs);
+    // re-Write the new sync list
+    WriteSyncList(&group->syncs);
 
-    // re-write the updated sync data
-    writeSyncData(&group->syncData);
+    // re-Write the updated sync data
+    WriteSyncData(&group->syncData);
 
-    writeEntryListing();
+    WriteEntryListing();
 }
 
-void XDBF::RewriteEntry(XDBFEntry entry, BYTE *entryBuffer)
+void Xdbf::ReWriteEntry(XdbfEntry entry, BYTE *entryBuffer)
 {
     // get the entry list
-    vector<XDBFEntry> *entryList;
+    vector<XdbfEntry> *entryList;
     switch (entry.type)
     {
         case Achievement:
@@ -844,7 +859,7 @@ void XDBF::RewriteEntry(XDBFEntry entry, BYTE *entryBuffer)
             entryList = &avatarAwards.entries;
             break;
         default:
-            throw string("XDBF: Error rewriting entry, entry type not supported.\n");
+            throw string("Xdbf: Error rewriting entry, entry type not supported.\n");
     }
 
     // make sure the entry already exists
@@ -853,7 +868,7 @@ void XDBF::RewriteEntry(XDBFEntry entry, BYTE *entryBuffer)
         if (entryList->at(i).id == entry.id)
             break;
     if (i == entryList->size())
-        throw string("XDBF: Error rewriting entry, entry not found.\n");
+        throw string("Xdbf: Error rewriting entry, entry not found.\n");
 
     // if the size has changed, then we need to reallocate memory
     if (entry.length != entryList->at(i).length)
@@ -863,20 +878,20 @@ void XDBF::RewriteEntry(XDBFEntry entry, BYTE *entryBuffer)
         entryList->at(i).length = entry.length;
     }
 
-    // write the entry
-    io->setPosition(GetRealAddress(entryList->at(i).addressSpecifier));
-    io->write(entryBuffer, entryList->at(i).length);
+    // Write the entry
+    io->SetPosition(GetRealAddress(entry.addressSpecifier));
+    io->Write(entryBuffer, entry.length);
 
     // update the file
     UpdateEntry(&entryList->at(i));
-    writeEntryListing();
+    WriteEntryListing();
 }
 
-void XDBF::DeleteEntry(XDBFEntry entry)
+void Xdbf::DeleteEntry(XdbfEntry entry)
 {
     // make sure that the entry exists
-    vector<XDBFEntry> *entries;
-    XDBFEntryGroup *group = 0;
+    vector<XdbfEntry> *entries;
+    XdbfEntryGroup *group = 0;
     switch (entry.type)
     {
         case Achievement:
@@ -902,7 +917,7 @@ void XDBF::DeleteEntry(XDBFEntry entry)
             group = &avatarAwards;
             break;
         default:
-            throw string("XDBF: Error deleting entry. Invalid entry type.\n");
+            throw string("Xdbf: Error deleting entry. Invalid entry type.\n");
     }
     DWORD index;
     for (index = 0; index < entries->size(); index++)
@@ -910,7 +925,7 @@ void XDBF::DeleteEntry(XDBFEntry entry)
             break;
     // if the entry doesn't exist then we have some problems
     if (index == entries->size())
-        throw string("XDBF: Error deleting entry. Specified entry doesn't exist.");
+        throw string("Xdbf: Error deleting entry. Specified entry doesn't exist.");
 
     // deallocate the entry's memory
     DeallocateMemory(GetRealAddress(entry.addressSpecifier), entry.length);
@@ -931,7 +946,7 @@ void XDBF::DeleteEntry(XDBFEntry entry)
                 {
                     group->syncs.synced.erase(group->syncs.synced.begin() + i);
                     group->syncs.lengthChanged = true;
-                    goto writeSyncs;
+                    goto WriteSyncs;
                 }
             for (DWORD i = 0; i < group->syncs.toSync.size(); i++)
                 if (group->syncs.toSync.at(i).entryID == entry.id)
@@ -941,34 +956,34 @@ void XDBF::DeleteEntry(XDBFEntry entry)
                     break;
                 }
 
-            writeSyncs:
-                writeSyncList(&group->syncs);
+            WriteSyncs:
+                WriteSyncList(&group->syncs);
                 break;
         case Image:
         case String:
             break;
         default:
-            throw string("XDBF: Error deleting entry. Invalid entry type.\n");
+            throw string("Xdbf: Error deleting entry. Invalid entry type.\n");
     }
 
-    // re-write the entry table
-    writeEntryListing();
+    // re-Write the entry table
+    WriteEntryListing();
 
     // update the header
     header.entryCount--;
-    writeHeader();
+    WriteHeader();
 }
 
-void XDBF::ExtractEntry(XDBFEntry entry, BYTE *outBuffer)
+void Xdbf::ExtractEntry(XdbfEntry entry, BYTE *outBuffer)
 {
     // seek to the begining of the entry
-    io->setPosition(GetRealAddress(entry.addressSpecifier));
+    io->SetPosition((UINT64)GetRealAddress(entry.addressSpecifier));
 
     // read the bytes of the entry
-    io->readBytes(outBuffer, entry.length);
+    io->ReadBytes(outBuffer, entry.length);
 }
 
-bool compareEntries(XDBFEntry a, XDBFEntry b)
+bool compareEntries(XdbfEntry a, XdbfEntry b)
 {
     if (a.type < b.type)
         return true;

@@ -1,5 +1,7 @@
 #include "StfsPackageWrapper.h"
 #include "MarshalUtil.h"
+#include "DotNetMemoryIO.h"
+#include "IO\MemoryIO.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -71,6 +73,23 @@ namespace VelocityNet
 			Initialize(path, flags);
 		}
 
+		StfsPackage::StfsPackage(array<System::Byte>^ data, UINT64 length)
+		{
+			//Initalize
+			Initialize(data, length, static_cast<StfsPackageFlags>(0));
+		}
+
+		StfsPackage::StfsPackage(array<System::Byte>^ data, UINT64 length, StfsPackageFlags flags)
+		{
+			//Initalize
+			Initialize(data, length, flags)
+		}
+
+		// yolo, hey
+		// so, you have a MemoryIO, that inhreits BaseIO, right?
+		// yeah. i have no idea how to pass a memory stream into that :$
+		// hmmm, yeah
+
 		StfsPackage::!StfsPackage()
 		{
 			if (package)
@@ -84,6 +103,25 @@ namespace VelocityNet
 			try
 			{
 				package = new ::StfsPackage(ToNativeString(path), static_cast<DWORD>(flags));
+				LoadImages();
+			}
+			catch (const std::string& e)
+			{
+				throw gcnew System::InvalidOperationException(ToManagedString(e));
+			}
+		}
+
+		void StfsPackage::Initialize(array<System::Byte>^ data, UINT64 length, StfsPackageFlags flags)
+		{
+			package = NULL;
+			closed = false;
+			try
+			{
+				BYTE *nativeData;
+				Marshal::Copy(data, 0, System::IntPtr(*nativeData), length);
+				MemoryIO *stream = new MemoryIO(nativeData, length);
+
+				package = new ::StfsPackage(stream, static_cast<DWORD>(flags));
 				LoadImages();
 			}
 			catch (const std::string& e)
