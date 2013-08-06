@@ -4,8 +4,10 @@
 #include "XboxInternals\Stfs\StfsPackage.h"
 #pragma managed
 
+#include "DotNetIO.h"
 #include "MarshalUtil.h"
 
+using namespace System::IO;
 using namespace System::Collections::Generic;
 
 namespace VelocityNet
@@ -199,12 +201,27 @@ namespace VelocityNet
 			StfsPackage(System::String^ path);
 
 			/// <summary>
+			/// Opens an STFS package from a stream using the default settings.
+			/// </summary>
+			/// <param name="stream">The stream to load the STFS container from.</param>
+			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while loading the package.</exception>
+			StfsPackage(Stream^ stream);
+
+			/// <summary>
 			/// Opens or creates an STFS package based upon flags that are specified.
 			/// </summary>
 			/// <param name="path">The path to the STFS container to open.</param>
 			/// <param name="flags">Flags to use to determine how to open or create the package.</param>
 			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while loading the package.</exception>
 			StfsPackage(System::String^ path, StfsPackageFlags flags);
+
+			/// <summary>
+			/// Opens or creates an STFS package backed by a stream based upon flags that are specified.
+			/// </summary>
+			/// <param name="stream">The stream to load the STFS container from.</param>
+			/// <param name="flags">Flags to use to determine how to open or create the package.</param>
+			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while loading the package.</exception>
+			StfsPackage(Stream^ stream, StfsPackageFlags flags);
 
 			/// <summary>
 			/// Gets the package's type (CON, LIVE, or PIRS).
@@ -321,12 +338,28 @@ namespace VelocityNet
 			void ExtractFile(System::String^ pathInPackage, System::String^ outPath);
 
 			/// <summary>
+			/// Extracts a file in the package to a designated stream.
+			/// </summary>
+			/// <param name="pathInPackage">The path to the file to extract in the package. Path components should be separated with backslashes.</param>
+			/// <param name="outStream">The stream to write the file to.</param>
+			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while extracting the file.</exception>
+			void ExtractFile(System::String^ pathInPackage, Stream^ outStream);
+
+			/// <summary>
 			/// Extracts a file in the package to a designated path.
 			/// </summary>
 			/// <param name="file">The file entry of the file to extract.</param>
 			/// <param name="outPath">The path to the file to extract it to.</param>
 			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while extracting the file.</exception>
 			void ExtractFile(StfsFileEntry^ file, System::String^ outPath);
+
+			/// <summary>
+			/// Extracts a file in the package to a designated stream.
+			/// </summary>
+			/// <param name="file">The file entry of the file to extract.</param>
+			/// <param name="outStream">The stream to write the file to.</param>
+			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while extracting the file.</exception>
+			void ExtractFile(StfsFileEntry^ file, Stream^ outStream);
 
 			/// <summary>
 			/// Gets the first four bytes of a file in the package. Useful for verifying a file's format.
@@ -361,12 +394,29 @@ namespace VelocityNet
 			StfsFileEntry^ InjectFile(System::String^ externalFilePath, System::String^ pathInPackage);
 
 			/// <summary>
+			/// Injects the contents of a stream into the package as a file.
+			/// </summary>
+			/// <param name="stream">The stream to read from.</param>
+			/// <param name="pathInPackage">The file's target path in the package. Path components should be separated with backslashes.</param>
+			/// <returns>The <see cref="StfsFileEntry"/> for the injected file.</returns>
+			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while injecting the file.</exception>
+			StfsFileEntry^ InjectFile(Stream^ stream, System::String^ pathInPackage);
+
+			/// <summary>
 			/// Replaces a file in the package with a new one.
 			/// </summary>
 			/// <param name="externalFilePath">The path to the external file to replace the file in the package with.</param>
 			/// <param name="pathInPackage">The path to the file to replace in the package. Path components should be separated with backslashes.</param>
 			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while replacing the file.</exception>
 			void ReplaceFile(System::String^ externalFilePath, System::String^ pathInPackage);
+
+			/// <summary>
+			/// Replaces a file in the package with the contents of a stream.
+			/// </summary>
+			/// <param name="stream">The stream to read from.</param>
+			/// <param name="pathInPackage">The path to the file to replace in the package. Path components should be separated with backslashes.</param>
+			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while replacing the file.</exception>
+			void ReplaceFile(Stream^ stream, System::String^ pathInPackage);
 
 			/// <summary>
 			/// Saves any changes made to the package's metadata (name, description, etc.) and writes them back to the package file.
@@ -390,11 +440,25 @@ namespace VelocityNet
 			void Resign(System::String^ kvPath);
 
 			/// <summary>
-			/// Rehashes the package, resigns it using data stored in a KV, and then writes any changed metadata back to the package file.
-			/// This is a shortcut method for calling <see cref="Rehash"/> and <see cref="Resign"/> together.
+			/// Resigns the package using data stored in a KV.
 			/// </summary>
+			/// <param name="kvStream">The stream to read the KV data from.</param>
+			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while resigning the package.</exception>
+			void Resign(Stream^ kvStream);
+
+			/// <summary>
+			/// Rehashes the package, resigns it using data stored in a KV, and then writes any changed metadata back to the package file.
+			/// </summary>
+			/// <param name="kvPath">The path to the KV file to use to resign the package.</param>
 			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while saving changes made to the package.</exception>
 			void SaveChanges(System::String^ kvPath);
+
+			/// <summary>
+			/// Rehashes the package, resigns it using data stored in a KV, and then writes any changed metadata back to the package file.
+			/// </summary>
+			/// <param name="kvStream">The stream to read the KV data from.</param>
+			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while saving changes made to the package.</exception>
+			void SaveChanges(Stream^ kvStream);
 
 			/// <summary>
 			/// Closes the package, releasing any I/O resources it acquired.
@@ -408,11 +472,13 @@ namespace VelocityNet
 		private:
 			::StfsPackage* package;
 			bool closed;
+			DotNetIO* io;
 
 			array<System::Byte>^ thumbnailImage;
 			array<System::Byte>^ titleThumbnailImage;
 
-			void Initialize(System::String^ path, StfsPackageFlags flags);
+			void Initialize(System::String^ path, DWORD flags);
+			void Initialize(Stream^ stream, DWORD flags);
 			void LoadImages();
 			void SaveImages();
 			void AssertPackageIsOpen();

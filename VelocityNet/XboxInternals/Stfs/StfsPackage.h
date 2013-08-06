@@ -89,8 +89,14 @@ public:
     // Description: extract a file to designated file path
     void ExtractFile(string pathInPackage, string outPath, void(*extractProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
 
+    // Description: extract a file to a designated stream
+    void ExtractFile(string pathInPackage, BaseIO *outStream, void(*extractProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
+
     // Description: extract a file (by FileEntry) to a designated file path
     void ExtractFile(StfsFileEntry *entry, string outPath, void(*extractProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
+
+    // Description: extract a file (by FileEntry) to a designated stream
+    void ExtractFile(StfsFileEntry *entry, BaseIO *outStream, void(*extractProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
 
     // Description: get the file entry of a file's path, sets nameLen to '0' if not found
     StfsFileEntry GetFileEntry(string pathInPackage, bool checkFolders = false, StfsFileEntry *newEntry = NULL);
@@ -111,6 +117,9 @@ public:
     void Resign(string kvPath);
 
     // Description: resign the file
+    void Resign(BaseIO *stream);
+
+    // Description: resign the file
     void Resign(BYTE* kvData, size_t length);
 
     // Description: remove a file entry from the file listing
@@ -122,6 +131,9 @@ public:
     // Description: inject a file into the package
     StfsFileEntry InjectFile(string path, string pathInPackage, void(*injectProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
 
+    // Description: inject the contents of a stream into the package
+    StfsFileEntry InjectFile(BaseIO *stream, string pathInPackage, void(*injectProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
+
     // Description: inject raw data into the package
     StfsFileEntry InjectData(BYTE *data, DWORD length, string pathInPackage, void(*injectProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
 
@@ -129,7 +141,13 @@ public:
     void ReplaceFile(string path, string pathInPackage, void(*replaceProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
 
     // Description: replace an existing file into the package
+    void ReplaceFile(BaseIO *stream, string pathInPackage, void(*replaceProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
+
+    // Description: replace an existing file into the package
     void ReplaceFile(string path, StfsFileEntry *entry, string pathInPackage, void(*replaceProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
+
+    // Description: replace an existing file into the package
+    void ReplaceFile(BaseIO *stream, StfsFileEntry *entry, string pathInPackage, void(*replaceProgress)(void*, DWORD, DWORD) = NULL, void *arg = NULL);
 
     // Description: rename an existing file in the package
     void RenameFile(string newName, string pathInPackage);

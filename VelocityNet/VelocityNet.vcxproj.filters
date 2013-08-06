@@ -34,6 +34,12 @@
     <Filter Include="Header Files\Botan\internal">
       <UniqueIdentifier>{fc773eb8-b22e-45fc-a3a2-6498a935a6dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\IO">
+      <UniqueIdentifier>{68c2dbe5-1272-4e75-b26d-6e7ceb91040e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IO">
+      <UniqueIdentifier>{5183168a-3e41-420b-9617-c1e77e3237cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MarshalUtil.h">
@@ -879,6 +885,9 @@
     <ClInclude Include="XboxInternals\IO\SvodMultiFileIO.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
+    <ClInclude Include="DotNetIO.h">
+      <Filter>Header Files\IO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -979,6 +988,9 @@
     </ClCompile>
     <ClCompile Include="XboxInternals\IO\SvodMultiFileIO.cpp">
       <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="DotNetIO.cpp">
+      <Filter>Source Files\IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

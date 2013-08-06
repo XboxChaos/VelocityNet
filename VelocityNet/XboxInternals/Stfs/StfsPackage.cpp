@@ -446,7 +446,25 @@ void StfsPackage::ExtractFile(string pathInPackage, string outPath, void (*extra
     ExtractFile(&entry, outPath, extractProgress, arg);
 }
 
-void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void (*extractProgress)(void*, DWORD, DWORD), void *arg)
+void StfsPackage::ExtractFile(string pathInPackage, BaseIO *outStream, void(*extractProgress)(void*, DWORD, DWORD), void *arg)
+{
+    // get the given path's file entry
+    StfsFileEntry entry = GetFileEntry(pathInPackage);
+
+    // extract the file
+    ExtractFile(&entry, outStream, extractProgress, arg);
+}
+
+void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void(*extractProgress)(void*, DWORD, DWORD), void *arg)
+{
+    // create/truncate our out file
+    FileIO outFile(outPath, true);
+
+    // extract the file
+    ExtractFile(entry, &outFile, extractProgress, arg);
+}
+
+void StfsPackage::ExtractFile(StfsFileEntry *entry, BaseIO *outStream, void (*extractProgress)(void*, DWORD, DWORD), void *arg)
 {
     if (entry->nameLen == 0)
     {
@@ -455,16 +473,13 @@ void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void (*extra
         throw except.str();
     }
 
-    // create/truncate our out file
-    FileIO outFile(outPath, true);
-
     // get the file size that we are extracting
     DWORD fileSize = entry->fileSize;
 
     // make a special case for files of size 0
     if (fileSize == 0)
     {
-        outFile.Close();
+        outStream->Close();
 
         // update progress if needed
         if (extractProgress != NULL)
@@ -490,13 +505,13 @@ void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void (*extra
         if (entry->blocksForFile <= blockCount)
         {
             io->ReadBytes(buffer, entry->fileSize);
-            outFile.Write(buffer, entry->fileSize);
+            outStream->Write(buffer, entry->fileSize);
 
             // update progress if needed
             if (extractProgress != NULL)
                 extractProgress(arg, entry->blocksForFile, entry->blocksForFile);
 
-            outFile.Close();
+            outStream->Close();
 
             // free the temp buffer
             delete[] buffer;
@@ -505,7 +520,7 @@ void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void (*extra
         else
         {
             io->ReadBytes(buffer, blockCount << 0xC);
-            outFile.Write(buffer, blockCount << 0xC);
+            outStream->Write(buffer, blockCount << 0xC);
 
             // update progress if needed
             if (extractProgress != NULL)
@@ -524,7 +539,7 @@ void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void (*extra
             io->ReadBytes(buffer, 0xAA000);
 
             // Write the bytes to the out file
-            outFile.Write(buffer, 0xAA000);
+            outStream->Write(buffer, 0xAA000);
 
             tempSize -= 0xAA000;
             blockCount += 0xAA;
@@ -545,7 +560,7 @@ void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void (*extra
             io->ReadBytes(buffer, tempSize);
 
             // Write it to the out file
-            outFile.Write(buffer, tempSize);
+            outStream->Write(buffer, tempSize);
 
             // update progress if needed
             if (extractProgress != NULL)
@@ -571,7 +586,7 @@ void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void (*extra
         for(DWORD i = 0; i < fullReadCounts; i++)
         {
             ExtractBlock(block, data);
-            outFile.Write(data, 0x1000);
+            outStream->Write(data, 0x1000);
 
             block = GetBlockHashEntry(block).nextBlock;
 
@@ -584,16 +599,13 @@ void StfsPackage::ExtractFile(StfsFileEntry *entry, string outPath, void (*extra
         if (fileSize != 0)
         {
             ExtractBlock(block, data, fileSize);
-            outFile.Write(data, fileSize);
+            outStream->Write(data, fileSize);
 
             // call the extract progress function if needed
             if (extractProgress != NULL)
                 extractProgress(arg, entry->blocksForFile, entry->blocksForFile);
         }
     }
-
-    // cleanup
-    outFile.Close();
 }
 
 DWORD StfsPackage::GetHashTableSkipSize(DWORD tableAddress)
@@ -1104,6 +1116,11 @@ void StfsPackage::Resign(string kvPath)
     metaData->ResignHeader(kvPath);
 }
 
+void StfsPackage::Resign(BaseIO *stream)
+{
+    metaData->ResignHeader(*stream);
+}
+
 void StfsPackage::Resign(BYTE* kvData, size_t length)
 {
     metaData->ResignHeader(kvData, length);
@@ -1557,10 +1574,17 @@ void StfsPackage::UpdateEntry(string pathInPackage, StfsFileEntry entry)
 
 StfsFileEntry StfsPackage::InjectFile(string path, string pathInPackage, void(*injectProgress)(void*, DWORD, DWORD), void *arg)
 {
+    // open our input file and inject it
+    FileIO file(path);
+    return InjectFile(&file, pathInPackage, injectProgress, arg);
+}
+
+StfsFileEntry StfsPackage::InjectFile(BaseIO *stream, string pathInPackage, void(*injectProgress)(void*, DWORD, DWORD), void *arg)
+{
     if(FileExists(pathInPackage))
         throw string("STFS: File already exists in the package.\n");
 
-    // split the string and open a io
+    // split the string
     vector<string> split = SplitString(pathInPackage, "\\");
     StfsFileListing *folder = NULL;
 
@@ -1583,11 +1607,9 @@ StfsFileEntry StfsPackage::InjectFile(string path, string pathInPackage, void(*i
         folder = &fileListing;
     }
 
-    FileIO fileIn(path);
-
-    fileIn.SetPosition(0, ios_base::end);
-    DWORD fileSize = fileIn.GetPosition();
-    fileIn.SetPosition(0);
+    stream->SetPosition(0, ios_base::end);
+    DWORD fileSize = stream->GetPosition();
+    stream->SetPosition(0);
 
     // set up the entry
     StfsFileEntry entry;
@@ -1626,7 +1648,7 @@ StfsFileEntry StfsPackage::InjectFile(string path, string pathInPackage, void(*i
         prevBlock = block;
 
         // read the data;
-        fileIn.ReadBytes(data, 0x1000);
+        stream->ReadBytes(data, 0x1000);
 
         io->SetPosition(BlockToAddress(block));
         io->Write(data, 0x1000);
@@ -1649,7 +1671,7 @@ StfsFileEntry StfsPackage::InjectFile(string path, string pathInPackage, void(*i
             SetNextBlock(prevBlock, block);
 
         BYTE *data = new BYTE[fileSize];
-        fileIn.ReadBytes(data, fileSize);
+        stream->ReadBytes(data, fileSize);
         io->SetPosition(BlockToAddress(block));
         io->Write(data, fileSize);
 
@@ -1662,7 +1684,6 @@ StfsFileEntry StfsPackage::InjectFile(string path, string pathInPackage, void(*i
         // free the heap memory
         delete[] data;
     }
-    fileIn.Close();
 
     SetNextBlock(block, INT24_MAX);
 
@@ -1797,14 +1818,25 @@ StfsFileEntry StfsPackage::InjectData(BYTE *data, DWORD length, string pathInPac
 
 void StfsPackage::ReplaceFile(string path, StfsFileEntry *entry, string pathInPackage, void (*replaceProgress)(void *, DWORD, DWORD), void *arg)
 {
+    // open our file and replace the file in the package
+    FileIO file(path);
+    ReplaceFile(&file, entry, pathInPackage, replaceProgress, arg);
+}
+
+void StfsPackage::ReplaceFile(BaseIO *stream, string pathInPackage, void(*replaceProgress)(void*, DWORD, DWORD), void *arg)
+{
+    StfsFileEntry entry = GetFileEntry(pathInPackage);
+    ReplaceFile(stream, &entry, pathInPackage, replaceProgress, arg);
+}
+
+void StfsPackage::ReplaceFile(BaseIO *stream, StfsFileEntry *entry, string pathInPackage, void (*replaceProgress)(void *, DWORD, DWORD), void *arg)
+{
     if (entry->nameLen == 0)
        throw string("STFS: File doesn't exists in the package.\n");
 
-    FileIO fileIn(path);
-
-    fileIn.SetPosition(0, ios_base::end);
-    DWORD fileSize = fileIn.GetPosition();
-    fileIn.SetPosition(0);
+    stream->SetPosition(0, ios_base::end);
+    DWORD fileSize = stream->GetPosition();
+    stream->SetPosition(0);
 
     // set up the entry
     entry->fileSize = fileSize;
@@ -1853,7 +1885,7 @@ void StfsPackage::ReplaceFile(string path, StfsFileEntry *entry, string pathInPa
 
         // read in the data
         BYTE toWrite[0x1000];
-        fileIn.ReadBytes(toWrite, 0x1000);
+        stream->ReadBytes(toWrite, 0x1000);
 
         // Write the data
         io->Write(toWrite, 0x1000);
@@ -1897,7 +1929,7 @@ void StfsPackage::ReplaceFile(string path, StfsFileEntry *entry, string pathInPa
         io->SetPosition(BlockToAddress(block));
 
         BYTE *toWrite = new BYTE[remainder];
-        fileIn.ReadBytes(toWrite, remainder);
+        stream->ReadBytes(toWrite, remainder);
 
         io->Write(toWrite, remainder);
 

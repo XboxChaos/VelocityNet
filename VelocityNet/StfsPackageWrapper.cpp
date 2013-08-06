@@ -63,27 +63,60 @@ namespace VelocityNet
 
 		StfsPackage::StfsPackage(System::String^ path)
 		{
-			Initialize(path, static_cast<StfsPackageFlags>(0));
+			Initialize(path, 0);
+		}
+
+		StfsPackage::StfsPackage(Stream^ stream)
+		{
+			Initialize(stream, 0);
 		}
 
 		StfsPackage::StfsPackage(System::String^ path, StfsPackageFlags flags)
+			: io(NULL)
 		{
-			Initialize(path, flags);
+			Initialize(path, (DWORD)flags);
+		}
+
+		StfsPackage::StfsPackage(Stream^ stream, StfsPackageFlags flags)
+		{
+			Initialize(stream, (DWORD)flags);
 		}
 
 		StfsPackage::!StfsPackage()
 		{
 			if (package)
+			{
 				delete package;
+				package = NULL;
+			}
+			if (io)
+			{
+				delete io;
+				io = NULL;
+			}
 		}
 
-		void StfsPackage::Initialize(System::String^ path, StfsPackageFlags flags)
+		void StfsPackage::Initialize(System::String^ path, DWORD flags)
 		{
-			package = NULL;
-			closed = false;
+			Stream^ stream = File::Open(path, FileMode::OpenOrCreate, FileAccess::ReadWrite);
 			try
 			{
-				package = new ::StfsPackage(ToNativeString(path), static_cast<DWORD>(flags));
+				Initialize(stream, flags);
+			}
+			finally
+			{
+				delete stream;
+			}
+		}
+
+		void StfsPackage::Initialize(Stream^ stream, DWORD flags)
+		{
+			try
+			{
+				io = new DotNetIO(stream);
+				package = new ::StfsPackage(io, (DWORD)flags);
+
+				closed = false;
 				LoadImages();
 			}
 			catch (const std::string& e)
@@ -138,10 +171,25 @@ namespace VelocityNet
 
 		void StfsPackage::ExtractFile(System::String^ pathInPackage, System::String^ outPath)
 		{
+			// The default file IO implementation in XI is really slow, so just use a .NET stream
+			Stream^ stream = File::Open(outPath, FileMode::Create, FileAccess::Write);
+			try
+			{
+				ExtractFile(pathInPackage, stream);
+			}
+			finally
+			{
+				delete stream;
+			}
+		}
+
+		void StfsPackage::ExtractFile(System::String^ pathInPackage, Stream^ outStream)
+		{
 			AssertPackageIsOpen();
 			try
 			{
-				package->ExtractFile(ToNativeString(pathInPackage), ToNativeString(outPath));
+				DotNetIO netStream(outStream);
+				package->ExtractFile(ToNativeString(pathInPackage), &netStream);
 			}
 			catch (const std::string& e)
 			{
@@ -151,11 +199,26 @@ namespace VelocityNet
 
 		void StfsPackage::ExtractFile(StfsFileEntry^ file, System::String^ outPath)
 		{
+			// The default file IO implementation in XI is really slow, so just use a .NET stream
+			Stream^ stream = File::Open(outPath, FileMode::Create, FileAccess::Write);
+			try
+			{
+				ExtractFile(file, stream);
+			}
+			finally
+			{
+				delete stream;
+			}
+		}
+
+		void StfsPackage::ExtractFile(StfsFileEntry^ file, Stream^ outStream)
+		{
 			AssertPackageIsOpen();
 			::StfsFileEntry entry = file->ToNativeEntry();
 			try
 			{
-				package->ExtractFile(&entry, ToNativeString(outPath));
+				DotNetIO netStream(outStream);
+				package->ExtractFile(&entry, &netStream);
 			}
 			catch (const std::string& e)
 			{
@@ -203,10 +266,25 @@ namespace VelocityNet
 
 		StfsFileEntry^ StfsPackage::InjectFile(System::String^ externalFilePath, System::String^ pathInPackage)
 		{
+			// The default file IO implementation in XI is really slow, so just use a .NET stream
+			Stream^ stream = File::OpenRead(externalFilePath);
+			try
+			{
+				return InjectFile(stream, pathInPackage);
+			}
+			finally
+			{
+				delete stream;
+			}
+		}
+
+		StfsFileEntry^ StfsPackage::InjectFile(Stream^ stream, System::String^ pathInPackage)
+		{
 			AssertPackageIsOpen();
 			try
 			{
-				::StfsFileEntry entry = package->InjectFile(ToNativeString(externalFilePath), ToNativeString(pathInPackage));
+				DotNetIO netStream(stream);
+				::StfsFileEntry entry = package->InjectFile(&netStream, ToNativeString(pathInPackage));
 				return gcnew StfsFileEntry(entry);
 			}
 			catch (const std::string& e)
@@ -217,10 +295,25 @@ namespace VelocityNet
 
 		void StfsPackage::ReplaceFile(System::String^ externalFilePath, System::String^ pathInPackage)
 		{
+			// The default file IO implementation in XI is really slow, so just use a .NET stream
+			Stream^ stream = File::OpenRead(externalFilePath);
+			try
+			{
+				ReplaceFile(stream, pathInPackage);
+			}
+			finally
+			{
+				delete stream;
+			}
+		}
+
+		void StfsPackage::ReplaceFile(Stream^ stream, System::String^ pathInPackage)
+		{
 			AssertPackageIsOpen();
 			try
 			{
-				package->ReplaceFile(ToNativeString(externalFilePath), ToNativeString(pathInPackage));
+				DotNetIO netStream(stream);
+				package->ReplaceFile(&netStream, ToNativeString(pathInPackage));
 			}
 			catch (const std::string& e)
 			{
@@ -258,10 +351,25 @@ namespace VelocityNet
 
 		void StfsPackage::Resign(System::String^ kvPath)
 		{
+			// The default file IO implementation in XI is really slow, so just use a .NET stream
+			Stream^ stream = File::OpenRead(kvPath);
+			try
+			{
+				Resign(stream);
+			}
+			finally
+			{
+				delete stream;
+			}
+		}
+
+		void StfsPackage::Resign(Stream^ kvStream)
+		{
 			AssertPackageIsOpen();
 			try
 			{
-				package->Resign(ToNativeString(kvPath));
+				DotNetIO netStream(kvStream);
+				package->Resign(&netStream);
 			}
 			catch (const std::string& e)
 			{
@@ -273,6 +381,12 @@ namespace VelocityNet
 		{
 			Rehash();
 			Resign(kvPath);
+		}
+
+		void StfsPackage::SaveChanges(Stream^ kvStream)
+		{
+			Rehash();
+			Resign(kvStream);
 		}
 
 		void StfsPackage::Close()
