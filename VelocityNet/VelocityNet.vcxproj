@@ -105,6 +105,7 @@
     <ClInclude Include="botan\blowfish.h" />
     <ClInclude Include="botan\bmw_512.h" />
     <ClInclude Include="botan\botan.h" />
+    <ClInclude Include="botan\botan_all.h" />
     <ClInclude Include="botan\bswap.h" />
     <ClInclude Include="botan\buf_comp.h" />
     <ClInclude Include="botan\buf_filt.h" />

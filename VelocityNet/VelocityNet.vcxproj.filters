@@ -888,6 +888,9 @@
     <ClInclude Include="DotNetIO.h">
       <Filter>Header Files\IO</Filter>
     </ClInclude>
+    <ClInclude Include="botan\botan_all.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
