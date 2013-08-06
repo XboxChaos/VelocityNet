@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,14 +21,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -52,9 +52,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;__WIN32;_DEBUG;NOMINMAX;XBOXINTERNALS_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(ProjectDir)XboxInternals;$(ProjectDir)botan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)XboxInternals;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
       <DisableSpecificWarnings>4635</DisableSpecificWarnings>
     </ClCompile>
@@ -65,9 +65,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;NDEBUG;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;__WIN32;NDEBUG;NOMINMAX;XBOXINTERNALS_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(ProjectDir)XboxInternals;$(ProjectDir)botan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)XboxInternals;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
       <DisableSpecificWarnings>4635</DisableSpecificWarnings>
     </ClCompile>
@@ -81,7 +81,248 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="botan\botan_all.h" />
+    <ClInclude Include="botan\adler32.h" />
+    <ClInclude Include="botan\aes.h" />
+    <ClInclude Include="botan\algo_base.h" />
+    <ClInclude Include="botan\algo_factory.h" />
+    <ClInclude Include="botan\alg_id.h" />
+    <ClInclude Include="botan\allocate.h" />
+    <ClInclude Include="botan\arc4.h" />
+    <ClInclude Include="botan\asn1_int.h" />
+    <ClInclude Include="botan\asn1_obj.h" />
+    <ClInclude Include="botan\asn1_oid.h" />
+    <ClInclude Include="botan\asn1_str.h" />
+    <ClInclude Include="botan\auto_rng.h" />
+    <ClInclude Include="botan\b64_filt.h" />
+    <ClInclude Include="botan\base64.h" />
+    <ClInclude Include="botan\basefilt.h" />
+    <ClInclude Include="botan\bcrypt.h" />
+    <ClInclude Include="botan\benchmark.h" />
+    <ClInclude Include="botan\ber_dec.h" />
+    <ClInclude Include="botan\bigint.h" />
+    <ClInclude Include="botan\blinding.h" />
+    <ClInclude Include="botan\block_cipher.h" />
+    <ClInclude Include="botan\blowfish.h" />
+    <ClInclude Include="botan\bmw_512.h" />
+    <ClInclude Include="botan\botan.h" />
+    <ClInclude Include="botan\bswap.h" />
+    <ClInclude Include="botan\buf_comp.h" />
+    <ClInclude Include="botan\buf_filt.h" />
+    <ClInclude Include="botan\build.h" />
+    <ClInclude Include="botan\camellia.h" />
+    <ClInclude Include="botan\cascade.h" />
+    <ClInclude Include="botan\cast128.h" />
+    <ClInclude Include="botan\cast256.h" />
+    <ClInclude Include="botan\cbc.h" />
+    <ClInclude Include="botan\cbc_mac.h" />
+    <ClInclude Include="botan\certstor.h" />
+    <ClInclude Include="botan\cfb.h" />
+    <ClInclude Include="botan\charset.h" />
+    <ClInclude Include="botan\cmac.h" />
+    <ClInclude Include="botan\comb4p.h" />
+    <ClInclude Include="botan\cpuid.h" />
+    <ClInclude Include="botan\crc24.h" />
+    <ClInclude Include="botan\crc32.h" />
+    <ClInclude Include="botan\crl_ent.h" />
+    <ClInclude Include="botan\cryptobox.h" />
+    <ClInclude Include="botan\ctr.h" />
+    <ClInclude Include="botan\cts.h" />
+    <ClInclude Include="botan\curve_gfp.h" />
+    <ClInclude Include="botan\datastor.h" />
+    <ClInclude Include="botan\data_snk.h" />
+    <ClInclude Include="botan\data_src.h" />
+    <ClInclude Include="botan\der_enc.h" />
+    <ClInclude Include="botan\des.h" />
+    <ClInclude Include="botan\desx.h" />
+    <ClInclude Include="botan\dh.h" />
+    <ClInclude Include="botan\divide.h" />
+    <ClInclude Include="botan\dlies.h" />
+    <ClInclude Include="botan\dl_algo.h" />
+    <ClInclude Include="botan\dl_group.h" />
+    <ClInclude Include="botan\dsa.h" />
+    <ClInclude Include="botan\dyn_engine.h" />
+    <ClInclude Include="botan\eax.h" />
+    <ClInclude Include="botan\ecb.h" />
+    <ClInclude Include="botan\ecc_key.h" />
+    <ClInclude Include="botan\ecdh.h" />
+    <ClInclude Include="botan\ecdsa.h" />
+    <ClInclude Include="botan\ec_group.h" />
+    <ClInclude Include="botan\elgamal.h" />
+    <ClInclude Include="botan\eme.h" />
+    <ClInclude Include="botan\eme1.h" />
+    <ClInclude Include="botan\eme_pkcs.h" />
+    <ClInclude Include="botan\emsa.h" />
+    <ClInclude Include="botan\emsa1.h" />
+    <ClInclude Include="botan\emsa1_bsi.h" />
+    <ClInclude Include="botan\emsa2.h" />
+    <ClInclude Include="botan\emsa3.h" />
+    <ClInclude Include="botan\emsa4.h" />
+    <ClInclude Include="botan\emsa_raw.h" />
+    <ClInclude Include="botan\engine.h" />
+    <ClInclude Include="botan\entropy_src.h" />
+    <ClInclude Include="botan\exceptn.h" />
+    <ClInclude Include="botan\filter.h" />
+    <ClInclude Include="botan\filters.h" />
+    <ClInclude Include="botan\fpe_fe1.h" />
+    <ClInclude Include="botan\get_byte.h" />
+    <ClInclude Include="botan\get_pbe.h" />
+    <ClInclude Include="botan\global_state.h" />
+    <ClInclude Include="botan\gost_28147.h" />
+    <ClInclude Include="botan\gost_3410.h" />
+    <ClInclude Include="botan\gost_3411.h" />
+    <ClInclude Include="botan\has160.h" />
+    <ClInclude Include="botan\hash.h" />
+    <ClInclude Include="botan\hash_id.h" />
+    <ClInclude Include="botan\hex.h" />
+    <ClInclude Include="botan\hex_filt.h" />
+    <ClInclude Include="botan\hmac.h" />
+    <ClInclude Include="botan\hmac_rng.h" />
+    <ClInclude Include="botan\idea.h" />
+    <ClInclude Include="botan\if_algo.h" />
+    <ClInclude Include="botan\init.h" />
+    <ClInclude Include="botan\internal\algo_cache.h" />
+    <ClInclude Include="botan\internal\assert.h" />
+    <ClInclude Include="botan\internal\bit_ops.h" />
+    <ClInclude Include="botan\internal\camellia_sbox.h" />
+    <ClInclude Include="botan\internal\core_engine.h" />
+    <ClInclude Include="botan\internal\defalloc.h" />
+    <ClInclude Include="botan\internal\def_powm.h" />
+    <ClInclude Include="botan\internal\dyn_load.h" />
+    <ClInclude Include="botan\internal\es_capi.h" />
+    <ClInclude Include="botan\internal\es_win32.h" />
+    <ClInclude Include="botan\internal\hres_timer.h" />
+    <ClInclude Include="botan\internal\mem_pool.h" />
+    <ClInclude Include="botan\internal\mlock.h" />
+    <ClInclude Include="botan\internal\mp_asm.h" />
+    <ClInclude Include="botan\internal\mp_asmi.h" />
+    <ClInclude Include="botan\internal\mp_core.h" />
+    <ClInclude Include="botan\internal\mutex.h" />
+    <ClInclude Include="botan\internal\mux_noop.h" />
+    <ClInclude Include="botan\internal\mux_win32.h" />
+    <ClInclude Include="botan\internal\out_buf.h" />
+    <ClInclude Include="botan\internal\pk_algs.h" />
+    <ClInclude Include="botan\internal\prefetch.h" />
+    <ClInclude Include="botan\internal\rounding.h" />
+    <ClInclude Include="botan\internal\simd_32.h" />
+    <ClInclude Include="botan\internal\simd_engine.h" />
+    <ClInclude Include="botan\internal\simd_scalar.h" />
+    <ClInclude Include="botan\internal\stl_util.h" />
+    <ClInclude Include="botan\internal\workfactor.h" />
+    <ClInclude Include="botan\internal\xor_buf.h" />
+    <ClInclude Include="botan\kasumi.h" />
+    <ClInclude Include="botan\kdf.h" />
+    <ClInclude Include="botan\kdf1.h" />
+    <ClInclude Include="botan\kdf2.h" />
+    <ClInclude Include="botan\keccak.h" />
+    <ClInclude Include="botan\keypair.h" />
+    <ClInclude Include="botan\key_filt.h" />
+    <ClInclude Include="botan\key_spec.h" />
+    <ClInclude Include="botan\libstate.h" />
+    <ClInclude Include="botan\lion.h" />
+    <ClInclude Include="botan\loadstor.h" />
+    <ClInclude Include="botan\lookup.h" />
+    <ClInclude Include="botan\look_pk.h" />
+    <ClInclude Include="botan\lubyrack.h" />
+    <ClInclude Include="botan\mac.h" />
+    <ClInclude Include="botan\mars.h" />
+    <ClInclude Include="botan\md2.h" />
+    <ClInclude Include="botan\md4.h" />
+    <ClInclude Include="botan\md5.h" />
+    <ClInclude Include="botan\mdx_hash.h" />
+    <ClInclude Include="botan\mem_ops.h" />
+    <ClInclude Include="botan\mgf1.h" />
+    <ClInclude Include="botan\misty1.h" />
+    <ClInclude Include="botan\mode_pad.h" />
+    <ClInclude Include="botan\mp_types.h" />
+    <ClInclude Include="botan\noekeon.h" />
+    <ClInclude Include="botan\noekeon_simd.h" />
+    <ClInclude Include="botan\nr.h" />
+    <ClInclude Include="botan\numthry.h" />
+    <ClInclude Include="botan\ofb.h" />
+    <ClInclude Include="botan\oids.h" />
+    <ClInclude Include="botan\openpgp.h" />
+    <ClInclude Include="botan\package.h" />
+    <ClInclude Include="botan\parsing.h" />
+    <ClInclude Include="botan\par_hash.h" />
+    <ClInclude Include="botan\passhash9.h" />
+    <ClInclude Include="botan\pbe.h" />
+    <ClInclude Include="botan\pbes1.h" />
+    <ClInclude Include="botan\pbes2.h" />
+    <ClInclude Include="botan\pbkdf.h" />
+    <ClInclude Include="botan\pbkdf1.h" />
+    <ClInclude Include="botan\pbkdf2.h" />
+    <ClInclude Include="botan\pem.h" />
+    <ClInclude Include="botan\pgp_s2k.h" />
+    <ClInclude Include="botan\pipe.h" />
+    <ClInclude Include="botan\pkcs10.h" />
+    <ClInclude Include="botan\pkcs8.h" />
+    <ClInclude Include="botan\pk_filts.h" />
+    <ClInclude Include="botan\pk_keys.h" />
+    <ClInclude Include="botan\pk_ops.h" />
+    <ClInclude Include="botan\point_gfp.h" />
+    <ClInclude Include="botan\pow_mod.h" />
+    <ClInclude Include="botan\prf_ssl3.h" />
+    <ClInclude Include="botan\prf_tls.h" />
+    <ClInclude Include="botan\prf_x942.h" />
+    <ClInclude Include="botan\pubkey.h" />
+    <ClInclude Include="botan\pubkey_enums.h" />
+    <ClInclude Include="botan\randpool.h" />
+    <ClInclude Include="botan\rc2.h" />
+    <ClInclude Include="botan\rc5.h" />
+    <ClInclude Include="botan\rc6.h" />
+    <ClInclude Include="botan\reducer.h" />
+    <ClInclude Include="botan\rfc3394.h" />
+    <ClInclude Include="botan\rmd128.h" />
+    <ClInclude Include="botan\rmd160.h" />
+    <ClInclude Include="botan\rng.h" />
+    <ClInclude Include="botan\rotate.h" />
+    <ClInclude Include="botan\rsa.h" />
+    <ClInclude Include="botan\rw.h" />
+    <ClInclude Include="botan\safer_sk.h" />
+    <ClInclude Include="botan\salsa20.h" />
+    <ClInclude Include="botan\scan_name.h" />
+    <ClInclude Include="botan\secmem.h" />
+    <ClInclude Include="botan\secqueue.h" />
+    <ClInclude Include="botan\seed.h" />
+    <ClInclude Include="botan\selftest.h" />
+    <ClInclude Include="botan\serpent.h" />
+    <ClInclude Include="botan\serp_simd.h" />
+    <ClInclude Include="botan\sha160.h" />
+    <ClInclude Include="botan\sha2_32.h" />
+    <ClInclude Include="botan\sha2_64.h" />
+    <ClInclude Include="botan\skein_512.h" />
+    <ClInclude Include="botan\skipjack.h" />
+    <ClInclude Include="botan\square.h" />
+    <ClInclude Include="botan\srp6.h" />
+    <ClInclude Include="botan\ssl3_mac.h" />
+    <ClInclude Include="botan\stream_cipher.h" />
+    <ClInclude Include="botan\symkey.h" />
+    <ClInclude Include="botan\sym_algo.h" />
+    <ClInclude Include="botan\tea.h" />
+    <ClInclude Include="botan\tiger.h" />
+    <ClInclude Include="botan\time.h" />
+    <ClInclude Include="botan\tss.h" />
+    <ClInclude Include="botan\turing.h" />
+    <ClInclude Include="botan\twofish.h" />
+    <ClInclude Include="botan\types.h" />
+    <ClInclude Include="botan\ui.h" />
+    <ClInclude Include="botan\version.h" />
+    <ClInclude Include="botan\whrlpool.h" />
+    <ClInclude Include="botan\wid_wake.h" />
+    <ClInclude Include="botan\x509cert.h" />
+    <ClInclude Include="botan\x509self.h" />
+    <ClInclude Include="botan\x509stor.h" />
+    <ClInclude Include="botan\x509_ca.h" />
+    <ClInclude Include="botan\x509_crl.h" />
+    <ClInclude Include="botan\x509_dn.h" />
+    <ClInclude Include="botan\x509_ext.h" />
+    <ClInclude Include="botan\x509_key.h" />
+    <ClInclude Include="botan\x509_obj.h" />
+    <ClInclude Include="botan\x919_mac.h" />
+    <ClInclude Include="botan\x931_rng.h" />
+    <ClInclude Include="botan\xtea.h" />
+    <ClInclude Include="botan\xtea_simd.h" />
+    <ClInclude Include="botan\xts.h" />
     <ClInclude Include="MarshalUtil.h" />
     <ClInclude Include="StfsPackageWrapper.h" />
     <ClInclude Include="XboxInternals\Account\Account.h" />
@@ -96,7 +337,10 @@
     <ClInclude Include="XboxInternals\dirent.h" />
     <ClInclude Include="XboxInternals\Disc\gdfx.h" />
     <ClInclude Include="XboxInternals\Disc\svod.h" />
-    <ClInclude Include="XboxInternals\FileIO.h" />
+    <ClInclude Include="XboxInternals\Fatx\FatxConstants.h" />
+    <ClInclude Include="XboxInternals\Fatx\FatxDrive.h" />
+    <ClInclude Include="XboxInternals\Fatx\FatxDriveDetection.h" />
+    <ClInclude Include="XboxInternals\Fatx\FatxHelpers.h" />
     <ClInclude Include="XboxInternals\GPD\AvatarAwardGPD.h" />
     <ClInclude Include="XboxInternals\GPD\DashboardGPD.h" />
     <ClInclude Include="XboxInternals\GPD\GameGPD.h" />
@@ -106,9 +350,12 @@
     <ClInclude Include="XboxInternals\GPD\XDBFHelpers.h" />
     <ClInclude Include="XboxInternals\IO\BaseIO.h" />
     <ClInclude Include="XboxInternals\IO\DeviceIO.h" />
+    <ClInclude Include="XboxInternals\IO\FatxIO.h" />
+    <ClInclude Include="XboxInternals\IO\FileIO.h" />
     <ClInclude Include="XboxInternals\IO\MemoryIO.h" />
     <ClInclude Include="XboxInternals\IO\MultiFileIO.h" />
     <ClInclude Include="XboxInternals\IO\SvodIO.h" />
+    <ClInclude Include="XboxInternals\IO\SvodMultiFileIO.h" />
     <ClInclude Include="XboxInternals\Stfs\StfsConstants.h" />
     <ClInclude Include="XboxInternals\Stfs\StfsDefinitions.h" />
     <ClInclude Include="XboxInternals\Stfs\StfsPackage.h" />
@@ -126,99 +373,90 @@
     <ClCompile Include="MarshalUtil.cpp" />
     <ClCompile Include="StfsPackageWrapper.cpp" />
     <ClCompile Include="XboxInternals\Account\Account.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\Account\AccountHelpers.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\AvatarAsset\AssetHelpers.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\AvatarAsset\AvatarAsset.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\AvatarAsset\YTGR.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\Cryptography\XeCrypt.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\Cryptography\XeKeys.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\Disc\gdfx.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\Disc\svod.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="XboxInternals\FileIO.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+    <ClCompile Include="XboxInternals\Fatx\FatxDrive.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Fatx\FatxDriveDetection.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Fatx\FatxHelpers.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\GPD\AvatarAwardGPD.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\GPD\DashboardGPD.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\GPD\GameGPD.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\GPD\GPDBase.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\GPD\XDBF.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\GPD\XDBFHelpers.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\IO\BaseIO.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\IO\DeviceIO.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\FatxIO.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\FileIO.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\IO\MemoryIO.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\IO\MultiFileIO.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\IO\SvodIO.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\SvodMultiFileIO.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\Stfs\StfsDefinitions.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\Stfs\StfsPackage.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XboxInternals\Stfs\XContentHeader.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
   </ItemGroup>

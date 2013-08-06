@@ -144,8 +144,8 @@ namespace VelocityNet
 			property System::UInt32 EntryOffset;
 
 		internal:
-			StfsFileEntry(const ::FileEntry& entry);
-			::FileEntry ToNativeEntry();
+			StfsFileEntry(const ::StfsFileEntry& entry);
+			::StfsFileEntry ToNativeEntry();
 		};
 
 		/// <summary>
@@ -178,7 +178,7 @@ namespace VelocityNet
 			property StfsFileEntry^ Entry;
 
 		internal:
-			StfsFileListing(const ::FileListing& listing);
+			StfsFileListing(const ::StfsFileListing& listing);
 
 		private:
 			List<StfsFileEntry^>^ files;
@@ -205,23 +205,6 @@ namespace VelocityNet
 			/// <param name="flags">Flags to use to determine how to open or create the package.</param>
 			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while loading the package.</exception>
 			StfsPackage(System::String^ path, StfsPackageFlags flags);
-
-			/// <summary>
-			/// Opens an STFS package from a byte array using the default settings.
-			/// </summary>
-			/// <param name="data">The byte data of the STFS controler to open.</param>
-			/// <param name="length">The length of the byte data of the STFS controler to open.</param>
-			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while loading the package.</exception>
-			StfsPackage(array<System::Byte>^ data, UINT64 length);
-
-			/// <summary>
-			/// Opens an STFS package from a byte array using the default settings.
-			/// </summary>
-			/// <param name="data">The byte data of the STFS controler to open.</param>
-			/// <param name="length">The length of the byte data of the STFS controler to open.</param>
-			/// <param name="flags">Flags to use to determine how to open or create the package.</param>
-			/// <exception cref="System::InvalidOperationException">Thrown if an error occurs while loading the package.</exception>
-			StfsPackage(array<System::Byte>^ data, UINT64 length, StfsPackageFlags flags);
 
 			/// <summary>
 			/// Gets the package's type (CON, LIVE, or PIRS).
@@ -429,8 +412,7 @@ namespace VelocityNet
 			array<System::Byte>^ thumbnailImage;
 			array<System::Byte>^ titleThumbnailImage;
 
-			void Initialize(System::String^ path, UINT64 length, StfsPackageFlags flags);
-			void Initialize(array<System::Byte>^ path, StfsPackageFlags flags);
+			void Initialize(System::String^ path, StfsPackageFlags flags);
 			void LoadImages();
 			void SaveImages();
 			void AssertPackageIsOpen();

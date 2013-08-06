@@ -354,7 +354,13 @@ void FatxDrive::InjectFile(FatxFileEntry *parent, std::string name, std::string 
     UINT64 fileLength = 0;
 
 #if __WIN32
-    // TODO: put windows file length code here
+    HANDLE fileHandle = CreateFileA(name.c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (fileHandle == INVALID_HANDLE_VALUE)
+        throw std::string("FATX: Error opening the file.\n");
+    LARGE_INTEGER largeLength;
+    GetFileSizeEx(fileHandle, &largeLength);
+    CloseHandle(fileHandle);
+    fileLength = largeLength.QuadPart;
 #else
     struct stat64 fileInfo;
     if (stat64(filePath.c_str(), &fileInfo) != 0)

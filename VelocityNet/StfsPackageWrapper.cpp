@@ -1,7 +1,5 @@
 #include "StfsPackageWrapper.h"
 #include "MarshalUtil.h"
-#include "DotNetMemoryIO.h"
-#include "IO\MemoryIO.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -10,7 +8,7 @@ namespace VelocityNet
 {
 	namespace Stfs
 	{
-		StfsFileEntry::StfsFileEntry(const ::FileEntry& entry)
+		StfsFileEntry::StfsFileEntry(const ::StfsFileEntry& entry)
 		{
 			Index = entry.entryIndex;
 			IsConsecutive = ((entry.flags & ConsecutiveBlocks) == ConsecutiveBlocks);
@@ -25,9 +23,9 @@ namespace VelocityNet
 			EntryOffset = entry.fileEntryAddress;
 		}
 
-		::FileEntry StfsFileEntry::ToNativeEntry()
+		::StfsFileEntry StfsFileEntry::ToNativeEntry()
 		{
-			::FileEntry result;
+			::StfsFileEntry result;
 			result.entryIndex = Index;
 			result.flags = static_cast<int>(IsConsecutive) | (static_cast<int>(IsFolder) << 1);
 			result.blocksForFile = BlocksForFile;
@@ -48,18 +46,18 @@ namespace VelocityNet
 			folders = gcnew List<StfsFileListing^>();
 		}
 
-		StfsFileListing::StfsFileListing(const ::FileListing& listing)
+		StfsFileListing::StfsFileListing(const ::StfsFileListing& listing)
 		{
 			files = gcnew List<StfsFileEntry^>();
 			folders = gcnew List<StfsFileListing^>();
 			Entry = gcnew StfsFileEntry(listing.folder);
 
 			// Add files
-			for (const ::FileEntry& file : listing.fileEntries)
+			for (const ::StfsFileEntry& file : listing.fileEntries)
 				files->Add(gcnew StfsFileEntry(file));
 
 			// Add folders
-			for (const ::FileListing& folder : listing.folderEntries)
+			for (const ::StfsFileListing& folder : listing.folderEntries)
 				folders->Add(gcnew StfsFileListing(folder));
 		}
 
@@ -72,23 +70,6 @@ namespace VelocityNet
 		{
 			Initialize(path, flags);
 		}
-
-		StfsPackage::StfsPackage(array<System::Byte>^ data, UINT64 length)
-		{
-			//Initalize
-			Initialize(data, length, static_cast<StfsPackageFlags>(0));
-		}
-
-		StfsPackage::StfsPackage(array<System::Byte>^ data, UINT64 length, StfsPackageFlags flags)
-		{
-			//Initalize
-			Initialize(data, length, flags)
-		}
-
-		// yolo, hey
-		// so, you have a MemoryIO, that inhreits BaseIO, right?
-		// yeah. i have no idea how to pass a memory stream into that :$
-		// hmmm, yeah
 
 		StfsPackage::!StfsPackage()
 		{
@@ -103,25 +84,6 @@ namespace VelocityNet
 			try
 			{
 				package = new ::StfsPackage(ToNativeString(path), static_cast<DWORD>(flags));
-				LoadImages();
-			}
-			catch (const std::string& e)
-			{
-				throw gcnew System::InvalidOperationException(ToManagedString(e));
-			}
-		}
-
-		void StfsPackage::Initialize(array<System::Byte>^ data, UINT64 length, StfsPackageFlags flags)
-		{
-			package = NULL;
-			closed = false;
-			try
-			{
-				BYTE *nativeData;
-				Marshal::Copy(data, 0, System::IntPtr(*nativeData), length);
-				MemoryIO *stream = new MemoryIO(nativeData, length);
-
-				package = new ::StfsPackage(stream, static_cast<DWORD>(flags));
 				LoadImages();
 			}
 			catch (const std::string& e)
@@ -190,7 +152,7 @@ namespace VelocityNet
 		void StfsPackage::ExtractFile(StfsFileEntry^ file, System::String^ outPath)
 		{
 			AssertPackageIsOpen();
-			FileEntry entry = file->ToNativeEntry();
+			::StfsFileEntry entry = file->ToNativeEntry();
 			try
 			{
 				package->ExtractFile(&entry, ToNativeString(outPath));
@@ -244,7 +206,7 @@ namespace VelocityNet
 			AssertPackageIsOpen();
 			try
 			{
-				FileEntry entry = package->InjectFile(ToNativeString(externalFilePath), ToNativeString(pathInPackage));
+				::StfsFileEntry entry = package->InjectFile(ToNativeString(externalFilePath), ToNativeString(pathInPackage));
 				return gcnew StfsFileEntry(entry);
 			}
 			catch (const std::string& e)

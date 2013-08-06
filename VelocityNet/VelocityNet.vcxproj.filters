@@ -31,8 +31,743 @@
     <Filter Include="Header Files\Stfs">
       <UniqueIdentifier>{c83ec17b-9920-41fc-a0b7-884caebfbd00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Botan\internal">
+      <UniqueIdentifier>{fc773eb8-b22e-45fc-a3a2-6498a935a6dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MarshalUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StfsPackageWrapper.h">
+      <Filter>Header Files\Stfs</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\adler32.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\aes.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\alg_id.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\algo_base.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\algo_factory.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\allocate.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\arc4.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\asn1_int.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\asn1_obj.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\asn1_oid.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\asn1_str.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\auto_rng.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\b64_filt.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\base64.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\basefilt.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\bcrypt.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\benchmark.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ber_dec.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\bigint.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\blinding.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\block_cipher.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\blowfish.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\bmw_512.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\botan.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\bswap.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\buf_comp.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\buf_filt.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\build.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\camellia.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cascade.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cast128.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cast256.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cbc.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cbc_mac.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\certstor.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cfb.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\charset.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cmac.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\comb4p.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cpuid.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\crc24.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\crc32.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\crl_ent.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cryptobox.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ctr.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\cts.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\curve_gfp.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\data_snk.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\data_src.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\datastor.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\der_enc.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\des.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\desx.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\dh.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\divide.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\dl_algo.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\dl_group.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\dlies.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\dsa.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\dyn_engine.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\eax.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ec_group.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ecb.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ecc_key.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ecdh.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ecdsa.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\elgamal.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\eme.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\eme_pkcs.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\eme1.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\emsa.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\emsa_raw.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\emsa1.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\emsa1_bsi.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\emsa2.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\emsa3.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\emsa4.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\engine.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\entropy_src.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\exceptn.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\filter.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\filters.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\fpe_fe1.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\get_byte.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\get_pbe.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\global_state.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\gost_3410.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\gost_3411.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\gost_28147.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\has160.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\hash.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\hash_id.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\hex.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\hex_filt.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\hmac.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\hmac_rng.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\idea.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\if_algo.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\init.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\kasumi.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\kdf.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\kdf1.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\kdf2.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\keccak.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\key_filt.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\key_spec.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\keypair.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\libstate.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\lion.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\loadstor.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\look_pk.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\lookup.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\lubyrack.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\mac.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\mars.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\md2.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\md4.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\md5.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\mdx_hash.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\mem_ops.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\mgf1.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\misty1.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\mode_pad.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\mp_types.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\noekeon.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\noekeon_simd.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\nr.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\numthry.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ofb.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\oids.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\openpgp.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\package.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\par_hash.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\parsing.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\passhash9.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pbe.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pbes1.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pbes2.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pbkdf.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pbkdf1.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pbkdf2.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pem.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pgp_s2k.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pipe.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pk_filts.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pk_keys.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pk_ops.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pkcs8.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pkcs10.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\point_gfp.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pow_mod.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\prf_ssl3.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\prf_tls.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\prf_x942.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pubkey.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\pubkey_enums.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\randpool.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rc2.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rc5.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rc6.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\reducer.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rfc3394.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rmd128.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rmd160.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rng.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rotate.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rsa.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\rw.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\safer_sk.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\salsa20.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\scan_name.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\secmem.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\secqueue.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\seed.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\selftest.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\serp_simd.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\serpent.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\sha2_32.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\sha2_64.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\sha160.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\skein_512.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\skipjack.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\square.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\srp6.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ssl3_mac.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\stream_cipher.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\sym_algo.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\symkey.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\tea.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\tiger.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\time.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\tss.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\turing.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\twofish.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\types.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\ui.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\version.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\whrlpool.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\wid_wake.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509_ca.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509_crl.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509_dn.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509_ext.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509_key.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509_obj.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509cert.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509self.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x509stor.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x919_mac.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\x931_rng.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\xtea.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\xtea_simd.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\xts.h">
+      <Filter>Header Files\Botan</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\algo_cache.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\assert.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\bit_ops.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\camellia_sbox.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\core_engine.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\def_powm.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\defalloc.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\dyn_load.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\es_capi.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\es_win32.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\hres_timer.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\mem_pool.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\mlock.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\mp_asm.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\mp_asmi.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\mp_core.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\mutex.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\mux_noop.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\mux_win32.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\out_buf.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\pk_algs.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\prefetch.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\rounding.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\simd_32.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\simd_engine.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\simd_scalar.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\stl_util.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\workfactor.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="botan\internal\xor_buf.h">
+      <Filter>Header Files\Botan\internal</Filter>
+    </ClInclude>
     <ClInclude Include="XboxInternals\Account\Account.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
@@ -51,61 +786,43 @@
     <ClInclude Include="XboxInternals\AvatarAsset\AvatarAssetDefinintions.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\GPD\AvatarAwardGPD.h">
+    <ClInclude Include="XboxInternals\AvatarAsset\YTGR.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\IO\BaseIO.h">
+    <ClInclude Include="XboxInternals\Cryptography\XeCrypt.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\GPD\DashboardGPD.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\IO\DeviceIO.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\dirent.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\FileIO.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\GPD\GameGPD.h">
+    <ClInclude Include="XboxInternals\Cryptography\XeKeys.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
     <ClInclude Include="XboxInternals\Disc\gdfx.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\GPD\GPDBase.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\IO\MemoryIO.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\IO\MultiFileIO.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\Stfs\StfsConstants.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\Stfs\StfsDefinitions.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
-    <ClInclude Include="XboxInternals\Stfs\StfsPackage.h">
-      <Filter>Header Files\XboxInternals</Filter>
-    </ClInclude>
     <ClInclude Include="XboxInternals\Disc\svod.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\IO\SvodIO.h">
+    <ClInclude Include="XboxInternals\Fatx\FatxConstants.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\winnames.h">
+    <ClInclude Include="XboxInternals\Fatx\FatxDrive.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\XboxInternals_global.h">
+    <ClInclude Include="XboxInternals\Fatx\FatxDriveDetection.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\Stfs\XContentHeader.h">
+    <ClInclude Include="XboxInternals\Fatx\FatxHelpers.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\AvatarAwardGPD.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\DashboardGPD.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\GameGPD.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\GPD\GPDBase.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
     <ClInclude Include="XboxInternals\GPD\XDBF.h">
@@ -117,26 +834,65 @@
     <ClInclude Include="XboxInternals\GPD\XDBFHelpers.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\Cryptography\XeCrypt.h">
+    <ClInclude Include="XboxInternals\Stfs\StfsConstants.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\Cryptography\XeKeys.h">
+    <ClInclude Include="XboxInternals\Stfs\StfsDefinitions.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="XboxInternals\AvatarAsset\YTGR.h">
+    <ClInclude Include="XboxInternals\Stfs\StfsPackage.h">
       <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="MarshalUtil.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="XboxInternals\Stfs\XContentHeader.h">
+      <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="botan\botan_all.h">
-      <Filter>Header Files\Botan</Filter>
+    <ClInclude Include="XboxInternals\dirent.h">
+      <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
-    <ClInclude Include="StfsPackageWrapper.h">
-      <Filter>Header Files\Stfs</Filter>
+    <ClInclude Include="XboxInternals\winnames.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\XboxInternals_global.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\BaseIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\DeviceIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\FatxIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\FileIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\MemoryIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\MultiFileIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\SvodIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxInternals\IO\SvodMultiFileIO.h">
+      <Filter>Header Files\XboxInternals</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarshalUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="botan\botan_all.cpp">
+      <Filter>Source Files\Botan</Filter>
+    </ClCompile>
+    <ClCompile Include="StfsPackageWrapper.cpp">
+      <Filter>Source Files\Stfs</Filter>
+    </ClCompile>
     <ClCompile Include="XboxInternals\Account\Account.cpp">
       <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
@@ -149,55 +905,7 @@
     <ClCompile Include="XboxInternals\AvatarAsset\AvatarAsset.cpp">
       <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
-    <ClCompile Include="XboxInternals\GPD\AvatarAwardGPD.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\IO\BaseIO.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\GPD\DashboardGPD.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\IO\DeviceIO.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\FileIO.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\GPD\GameGPD.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\Disc\gdfx.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\GPD\GPDBase.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\IO\MemoryIO.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\IO\MultiFileIO.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\Stfs\StfsDefinitions.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\Stfs\StfsPackage.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\Disc\svod.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\IO\SvodIO.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\Stfs\XContentHeader.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\GPD\XDBF.cpp">
-      <Filter>Source Files\XboxInternals</Filter>
-    </ClCompile>
-    <ClCompile Include="XboxInternals\GPD\XDBFHelpers.cpp">
+    <ClCompile Include="XboxInternals\AvatarAsset\YTGR.cpp">
       <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
     <ClCompile Include="XboxInternals\Cryptography\XeCrypt.cpp">
@@ -206,20 +914,71 @@
     <ClCompile Include="XboxInternals\Cryptography\XeKeys.cpp">
       <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
-    <ClCompile Include="XboxInternals\AvatarAsset\YTGR.cpp">
+    <ClCompile Include="XboxInternals\Disc\gdfx.cpp">
       <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
-    <ClCompile Include="AssemblyInfo.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="XboxInternals\Disc\svod.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
-    <ClCompile Include="MarshalUtil.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="XboxInternals\Fatx\FatxDrive.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
-    <ClCompile Include="botan\botan_all.cpp">
-      <Filter>Source Files\Botan</Filter>
+    <ClCompile Include="XboxInternals\Fatx\FatxDriveDetection.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
-    <ClCompile Include="StfsPackageWrapper.cpp">
-      <Filter>Source Files\Stfs</Filter>
+    <ClCompile Include="XboxInternals\Fatx\FatxHelpers.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\AvatarAwardGPD.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\DashboardGPD.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\GameGPD.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\GPDBase.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\XDBF.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\GPD\XDBFHelpers.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Stfs\StfsDefinitions.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Stfs\StfsPackage.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\Stfs\XContentHeader.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\BaseIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\DeviceIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\FatxIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\FileIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\MemoryIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\MultiFileIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\SvodIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInternals\IO\SvodMultiFileIO.cpp">
+      <Filter>Source Files\XboxInternals</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
